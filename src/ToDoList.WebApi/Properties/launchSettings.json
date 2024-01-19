@@ -28,6 +28,16 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    "8080 Dev": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "executablePath": "dotnet",
+      "commandLineArgs": "run --project ToDoList.WebApi.csproj",
+      "applicationUrl": "http://localhost:8080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
