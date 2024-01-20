@@ -5,11 +5,11 @@ using ToDoList.Domain.Entities;
 
 namespace ToDoList.Infrastructure.Database;
 
-internal class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
+public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
-    public virtual DbSet<Note> Notes => Set<Note>();
+    protected internal virtual DbSet<Note> Notes => Set<Note>();
 
-    public virtual DbSet<NoteList> NoteLists => Set<NoteList>();
+    protected internal virtual DbSet<NoteList> NoteLists => Set<NoteList>();
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
