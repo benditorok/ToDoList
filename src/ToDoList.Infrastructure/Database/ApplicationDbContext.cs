@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +11,7 @@ using ToDoList.Domain.Entities.ToDo;
 
 namespace ToDoList.Infrastructure.Database;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
     protected virtual DbSet<Note>? Notes { get; set; }
 
@@ -40,6 +42,12 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Note>()
             .Property(x => x.Id)
             .ValueGeneratedOnAdd();
+
+        #endregion
+
+        #region Identity
+        // TODO add roles, seed
+
         #endregion
     }
 }
