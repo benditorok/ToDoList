@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ToDoList.Domain.Entities;
+namespace ToDoList.Domain.Entities.ToDo;
 
-public class ToDoItem : IEquatable<ToDoItem>
+public class Note : IEquatable<Note>
 {
     public int Id { get; set; }
 
@@ -18,25 +18,19 @@ public class ToDoItem : IEquatable<ToDoItem>
 
     public bool IsDone { get; set; } = false;
 
-    public int ToDoListId { get; set; }
-
-    public virtual ToDoList? ToDoList { get; set; }
-
-    public ToDoItem()
+    public Note()
     {
     }
 
-    public ToDoItem(int id, string creator, string title, string body, bool isDone, int toDoListId)
+    public Note(string creator, string title, string body, bool isDone)
     {
-        Id = id;
         Creator = creator;
         Title = title;
         Body = body;
         IsDone = isDone;
-        ToDoListId = toDoListId;
     }
 
-    public bool Equals(ToDoItem? other)
+    public bool Equals(Note? other)
     {
         return GetHashCode() == other?.GetHashCode();
     }
