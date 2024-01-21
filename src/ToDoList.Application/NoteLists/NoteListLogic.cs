@@ -1,7 +1,7 @@
-﻿using ToDoList.Application.Interfaces.Repository;
+﻿using ToDoList.Application.Common.Interfaces;
 using ToDoList.Domain.Entities;
 
-namespace ToDoList.Application.Logic;
+namespace ToDoList.Application.NoteLists;
 
 public class NoteListLogic
 {

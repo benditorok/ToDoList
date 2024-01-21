@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToDoList.Application.Logic;
+using ToDoList.Application.NoteLists;
+using ToDoList.Application.Notes;
 
 namespace ToDoList.Application;
 

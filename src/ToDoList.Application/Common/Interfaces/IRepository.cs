@@ -1,4 +1,4 @@
-﻿namespace ToDoList.Application.Interfaces.Repository;
+﻿namespace ToDoList.Application.Common.Interfaces;
 
 public interface IRepository<T> where T : class
 {
