@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ToDoList.Application.Interfaces.Repository;
+using ToDoList.Application.Common.Interfaces;
 using ToDoList.Domain.Entities;
 using ToDoList.Infrastructure.Database;
 using ToDoList.Infrastructure.Repositories;

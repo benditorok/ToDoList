@@ -26,4 +26,8 @@
     <ProjectReference Include="..\ToDoList.Application\ToDoList.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Identity\" />
+  </ItemGroup>
+
 </Project>

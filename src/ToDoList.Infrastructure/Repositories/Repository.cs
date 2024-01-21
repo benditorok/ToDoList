@@ -1,4 +1,4 @@
-﻿using ToDoList.Application.Interfaces.Repository;
+﻿using ToDoList.Application.Common.Interfaces;
 using ToDoList.Infrastructure.Database;
 
 namespace ToDoList.Infrastructure.Repositories;
