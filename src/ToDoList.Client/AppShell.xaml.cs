@@ -1,4 +1,4 @@
-﻿namespace Client;
+﻿namespace ToDoList.Client;
 
 public partial class AppShell : Shell
 {

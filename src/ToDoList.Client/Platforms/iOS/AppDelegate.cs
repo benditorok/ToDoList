@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace Client.Platforms.iOS;
+namespace ToDoList.Client;
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate
 {

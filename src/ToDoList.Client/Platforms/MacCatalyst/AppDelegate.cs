@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace Client.Platforms.MacCatalyst;
+namespace ToDoList.Client;
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate
 {

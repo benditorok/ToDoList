@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Client;
+namespace ToDoList.Client;
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()

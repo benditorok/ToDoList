@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace Client.Platforms.MacCatalyst;
+namespace ToDoList.Client;
 public class Program
 {
     // This is the main entry point of the application.

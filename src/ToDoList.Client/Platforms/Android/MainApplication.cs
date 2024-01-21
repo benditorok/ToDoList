@@ -1,11 +1,11 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace Client.Platforms.Android;
+namespace ToDoList.Client;
 [Application]
 public class MainApplication : MauiApplication
 {
-    public MainApplication(nint handle, JniHandleOwnership ownership)
+    public MainApplication(IntPtr handle, JniHandleOwnership ownership)
         : base(handle, ownership)
     {
     }
