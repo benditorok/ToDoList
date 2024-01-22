@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Application.Logic;
+using ToDoList.Application.Notes;
 using ToDoList.Domain.Entities;
 
 namespace ToDoList.WebApi.Controllers;
@@ -18,6 +18,7 @@ public class NoteController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Administrator, Manager")]
     public async Task<IActionResult> CreateAsync([FromBody] Note value)
     {
         try
@@ -32,6 +33,7 @@ public class NoteController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "Administrator, Manager")]
     public async Task<IActionResult> ReadAsync(int id)
     {
         try
@@ -45,6 +47,7 @@ public class NoteController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize(Roles = "Administrator, Manager")]
     public async Task<IActionResult> UpdateAsync([FromBody] Note value)
     {
         try
@@ -59,6 +62,7 @@ public class NoteController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Administrator, Manager")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         try
