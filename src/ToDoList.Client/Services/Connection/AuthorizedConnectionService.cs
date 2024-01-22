@@ -9,7 +9,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ToDoList.Client.Services.Connection;
-internal class AuthorizedConnectionService : ConnectionService
+public class AuthorizedConnectionService : ConnectionService
 {
     private string? _tokenType;
     private string? _accessToken;
@@ -27,7 +27,7 @@ internal class AuthorizedConnectionService : ConnectionService
     private void UpdateHeaderToken()
     {
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_tokenType!, _accessToken);
-        _logger?.LogInformation("Updated bearer token.");
+        _logger?.LogInformation("[AUTH] Updated bearer token");
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ internal class AuthorizedConnectionService : ConnectionService
         }
         catch (Exception)
         {
-            _logger?.LogInformation("Refreshing bearer token failed!");
+            _logger?.LogInformation("[AUTH-EX] Refreshing bearer token failed");
         }
         finally
         {
@@ -79,17 +79,17 @@ internal class AuthorizedConnectionService : ConnectionService
     /// <summary>
     /// Log in to the user account using an username/email and a password
     /// </summary>
-    /// <param name="_username">Username</param>
-    /// <param name="_password">Password</param>
+    /// <param name="username">Username</param>
+    /// <param name="password">Password</param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public async Task AuthorizeAsync(string _username, string _password)
+    public async Task LoginAsync(string username, string password)
     {
         // Json type definition
         var requestData = new
         {
-            email = _username,
-            password = _password,
+            email = username,
+            password = password,
             twoFactorCode = "string",
             twoFactorRecoveryCode = "string"
         };
@@ -119,10 +119,41 @@ internal class AuthorizedConnectionService : ConnectionService
 
             // Create a timer to refresh the access token
             _refreshTimer = new Timer(async x => await RefreshTokenAsync(), null, _expiresIn, Timeout.Infinite);
+
+            _logger?.LogInformation("[AUTH] Login successful");
         }
         else
         {
             var error = await response.Content.ReadFromJsonAsync<Exception>();
+            _logger?.LogInformation("[AUTH-EX] Login failed: {msg}", error?.Message);
+
+            throw new ArgumentException(error?.Message);
+        }
+    }
+    public async Task RegisterAsync(string username, string password)
+    {
+        // Json type definition
+        var requestData = new
+        {
+            email = username,
+            password = password,
+        };
+
+        // Convert request data to JSON
+        string jsonData = JsonSerializer.Serialize(requestData);
+        var requestContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+        HttpResponseMessage response = await _client.PostAsync("register", requestContent);
+
+        if (response.IsSuccessStatusCode)
+        {
+            _logger?.LogInformation("[AUTH] Account registered");
+        }
+        else
+        {
+            var error = await response.Content.ReadFromJsonAsync<Exception>();
+            _logger?.LogInformation("[AUTH-EX] Registration failed: {msg}", error?.Message);
+
             throw new ArgumentException(error?.Message);
         }
     }
