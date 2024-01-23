@@ -15,5 +15,11 @@ internal class NoteListConfiguration : IEntityTypeConfiguration<NoteList>
         // Auto increment
         builder.Property(x => x.Id)
             .ValueGeneratedOnAdd();
+
+        // Navigation property
+        builder
+            .HasMany(x => x.Notes)
+            .WithOne(x => x.NoteList)
+            .HasForeignKey(x => x.NoteListId);
     }
 }

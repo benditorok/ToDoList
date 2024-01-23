@@ -19,8 +19,8 @@ public static class DependencyInjection
                 .UseLazyLoadingProxies();
         });
 
-        services.AddTransient<IRepository<Note>, NoteRepository>();
-        services.AddTransient<IRepository<NoteList>, NoteListRepository>();
+        services.AddScoped<IRepository<Note>, NoteRepository>();
+        services.AddScoped<IRepository<NoteList>, NoteListRepository>();
 
         return services;
     }

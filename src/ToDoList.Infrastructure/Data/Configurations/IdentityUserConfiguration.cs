@@ -40,5 +40,6 @@ internal class IdentityUserConfiguration : IEntityTypeConfiguration<IdentityUser
                     PasswordHash = hasher.HashPassword(null!, "Passw0rd!")
                 }
             });
+
     }
 }
