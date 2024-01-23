@@ -3,7 +3,7 @@ using ToDoList.Domain.Entities;
 
 namespace ToDoList.Application.Notes;
 
-public class NoteLogic
+public class NoteLogic : ILogic<Note>
 {
     private IRepository<Note> _repo;
 
@@ -12,10 +12,11 @@ public class NoteLogic
         _repo = repo;
     }
 
-    // TODO Implement logic
-    public async Task CreateAsync(Note item)
+    // TODO Data sanitization, logic
+    public async Task<int> CreateAsync(Note item)
     {
         await _repo.CreateAsync(item);
+        return item.Id;
     }
 
     public async Task<Note> ReadAsync(int id)
@@ -31,5 +32,10 @@ public class NoteLogic
     public async Task DeleteAsync(int id)
     {
         await _repo.DeleteAsync(id);
+    }
+
+    public IQueryable<Note> ReadAll()
+    {
+        return _repo.ReadAll();
     }
 }
