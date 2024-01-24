@@ -32,6 +32,7 @@ public partial class LoginViewModel : ObservableObject
             {
                 await _connectionService.LoginAsync(Username!, Password!);
                 await Shell.Current.DisplayAlert("Alert", "Login was successful!", "OK");
+                await Shell.Current.GoToAsync("..");
             }
         }
         catch (Exception ex)

@@ -32,6 +32,7 @@ public partial class RegisterViewModel : ObservableObject
             {
                 await _connectionService.RegisterAsync(Username!, Password!);
                 await Shell.Current.DisplayAlert("Alert", "Registration was successful!", "OK");
+                await Shell.Current.GoToAsync("..");
             }
         }
         catch (Exception ex)
