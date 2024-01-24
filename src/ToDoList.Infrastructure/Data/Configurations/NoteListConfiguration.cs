@@ -20,6 +20,7 @@ internal class NoteListConfiguration : IEntityTypeConfiguration<NoteList>
         builder
             .HasMany(x => x.Notes)
             .WithOne(x => x.NoteList)
-            .HasForeignKey(x => x.NoteListId);
+            .HasForeignKey(x => x.NoteListId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
