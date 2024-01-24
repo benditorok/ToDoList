@@ -21,6 +21,11 @@
                 Margin="0, 10"
                 BackgroundColor="LightGreen" 
                 Command="{Binding GotoLoginPageCommand}" />
-        
+
+        <Button Text="Note lists"
+                Margin="0, 10"
+                BackgroundColor="LightCoral" 
+                Command="{Binding GotoNoteListPageCommand}" />
+
     </VerticalStackLayout>
 </ContentPage>

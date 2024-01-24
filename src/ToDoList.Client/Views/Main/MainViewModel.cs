@@ -20,4 +20,10 @@ public partial class MainViewModel : ObservableObject
     {
         await Shell.Current.GoToAsync("RegisterPage");
     }
+
+    [RelayCommand]
+    private async Task GotoNoteListPage()
+    {
+        await Shell.Current.GoToAsync("NoteListPage");
+    }
 }

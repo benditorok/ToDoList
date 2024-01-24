@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToDoList.Client.Views.Identity;
 using ToDoList.Client.Views.Main;
+using ToDoList.Client.Views.NoteLists;
 
 namespace ToDoList.Client.Views;
 
@@ -11,11 +12,14 @@ public static class DependencyInjection
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<MainPage>();
 
-        services.AddSingleton<LoginViewModel>();
-        services.AddSingleton<LoginPage>();
+        services.AddTransient<LoginViewModel>();
+        services.AddTransient<LoginPage>();
 
-        services.AddSingleton<RegisterViewModel>();
-        services.AddSingleton<RegisterPage>();
+        services.AddTransient<RegisterViewModel>();
+        services.AddTransient<RegisterPage>();
+
+        services.AddSingleton<NoteListViewModel>();
+        services.AddSingleton<NoteListPage>();
 
         return services;
     }

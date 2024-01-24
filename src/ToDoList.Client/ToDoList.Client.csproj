@@ -75,7 +75,7 @@
 	  <MauiXaml Update="Views\Main\MainPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\NoteList\NoteListPage.xaml">
+	  <MauiXaml Update="Views\NoteLists\NoteListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Identity\LoginPage.xaml">

@@ -12,6 +12,7 @@ namespace ToDoList.Client.Services.Connection;
 
 public class ConnectionService
 {
+    // TODO cleanup
     private readonly ConnectionData _connectionData;
     protected readonly ILogger<ConnectionService>? _logger;
 
@@ -131,6 +132,7 @@ public class ConnectionService
         return item!;
     }
 
+    // TODO return id?
     public async Task PostAsync<T>(T item, string endpoint)
     {
         HttpResponseMessage response = await _client.PostAsJsonAsync(endpoint, item);
