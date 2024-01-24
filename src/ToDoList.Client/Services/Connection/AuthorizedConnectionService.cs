@@ -124,10 +124,9 @@ public class AuthorizedConnectionService : ConnectionService
         }
         else
         {
-            var error = await response.Content.ReadFromJsonAsync<Exception>();
-            _logger?.LogInformation("[AUTH-EX] Login failed: {msg}", error?.Message);
-
-            throw new ArgumentException(error?.Message);
+            var error = await response.Content.ReadAsStringAsync();
+            _logger?.LogInformation("[AUTH-EX] (Login failed) {msg}", error);
+            throw new InvalidOperationException(error);
         }
     }
     public async Task RegisterAsync(string username, string password)
@@ -151,10 +150,9 @@ public class AuthorizedConnectionService : ConnectionService
         }
         else
         {
-            var error = await response.Content.ReadFromJsonAsync<Exception>();
-            _logger?.LogInformation("[AUTH-EX] Registration failed: {msg}", error?.Message);
-
-            throw new ArgumentException(error?.Message);
+            var error = await response.Content.ReadAsStringAsync();
+            _logger?.LogInformation("[AUTH-EX] (Registration failed) {msg}", error);
+            throw new InvalidOperationException(error);
         }
     }
 }
