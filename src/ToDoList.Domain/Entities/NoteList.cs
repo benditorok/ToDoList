@@ -10,6 +10,8 @@ public class NoteList : IEquatable<NoteList>
 
     public Color Color { get; set; } = Color.White;
 
+    public string? UserId { get; set; }
+
     public virtual ICollection<Note> Notes { get; set; } = new HashSet<Note>();
 
     public NoteList()
