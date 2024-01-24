@@ -12,7 +12,7 @@ namespace ToDoList.Client.Services.Connection;
 
 public class ConnectionService
 {
-    // TODO cleanup
+    // TODO HIGH refactor 
     private readonly ConnectionData _connectionData;
     protected readonly ILogger<ConnectionService>? _logger;
 
@@ -51,7 +51,7 @@ public class ConnectionService
         catch (Exception)
         {
             _status = false;
-            _logger?.LogInformation("Endpoint {pingableEndpoint} is not accessible, ping failed", pingableEndpoint);
+            _logger?.LogInformation("Endpoint {pingableEndpoint} is not accessible on {ip}", pingableEndpoint, _connectionData.BaseURL);
         }
         finally
         {
@@ -60,136 +60,61 @@ public class ConnectionService
         }
     }
 
-    public async Task<List<T>> GetAsync<T>(string endpoint)
+    public async Task<T?> GetAsync<T>(string uri)
     {
-        List<T>? items;
-        HttpResponseMessage response = await _client.GetAsync(endpoint);
+        HttpResponseMessage response = await _client.GetAsync(uri);
 
         if (response.IsSuccessStatusCode)
         {
-            items = await response.Content.ReadFromJsonAsync<List<T>>();
+            return await response.Content.ReadFromJsonAsync<T>();
         }
         else
         {
-            var error = await response.Content.ReadFromJsonAsync<Exception>();
-            throw new ArgumentException(error?.Message);
+            var error = await response.Content.ReadAsStringAsync();
+            _logger?.LogInformation("[GET-EX] " + error);
+            throw new InvalidOperationException(error);
         }
-
-        return items!;
     }
 
-    public async Task<string> GetAsJsonAsync<T>(string endpoint)
+    public async Task<object?> PostAsync<T>(string uri, T item)
     {
-        string? content;
-        HttpResponseMessage response = await _client.GetAsync(endpoint);
+        HttpResponseMessage response = await _client.PostAsJsonAsync(uri, item);
 
         if (response.IsSuccessStatusCode)
         {
-            content = await response.Content.ReadAsStringAsync();
+            // Returns the Id of the created object
+            object? id = await response.Content.ReadFromJsonAsync<object?>();
+            return id;
         }
         else
         {
-            var error = await response.Content.ReadFromJsonAsync<Exception>();
-            throw new ArgumentException(error?.Message);
+            var error = await response.Content.ReadAsStringAsync();
+            _logger?.LogInformation("[POST-EX] " + error);
+            throw new InvalidOperationException(error);
         }
-
-        return content!;
     }
 
-    public async Task<T> GetSingleAsync<T>(string endpoint)
+    public async Task DeleteAsync(string uri)
     {
-        T? item;
-        HttpResponseMessage response = await _client.GetAsync(endpoint);
-
-        if (response.IsSuccessStatusCode)
-        {
-            item = await response.Content.ReadFromJsonAsync<T>();
-        }
-        else
-        {
-            var error = await response.Content.ReadFromJsonAsync<Exception>();
-            throw new ArgumentException(error?.Message);
-        }
-
-        return item!;
-    }
-
-    public async Task<T> GetAsync<T>(int id, string endpoint)
-    {
-        T? item;
-        HttpResponseMessage response = await _client.GetAsync(endpoint + "/" + id.ToString());
-
-        if (response.IsSuccessStatusCode)
-        {
-            item = await response.Content.ReadFromJsonAsync<T>();
-        }
-        else
-        {
-            var error = await response.Content.ReadFromJsonAsync<Exception>();
-            throw new ArgumentException(error?.Message);
-        }
-
-        return item!;
-    }
-
-    // TODO return id?
-    public async Task PostAsync<T>(T item, string endpoint)
-    {
-        HttpResponseMessage response = await _client.PostAsJsonAsync(endpoint, item);
+        HttpResponseMessage response = await _client.DeleteAsync(uri);
 
         if (!response.IsSuccessStatusCode)
         {
-            var error = await response.Content.ReadFromJsonAsync<Exception>();
-            _logger?.LogInformation("[POST ERROR] " + error?.Message);
-
-            throw new ArgumentException(error?.Message);
+            var error = await response.Content.ReadAsStringAsync();
+            _logger?.LogInformation("[DELETE-EX] " + error);
+            throw new InvalidOperationException(error);
         }
     }
 
-    /// <summary>
-    /// Returns the Json data as a string.
-    /// </summary>
-    /// <param name="item">JSON serialized input</param>
-    /// <param name="endpoint">Endpoint</param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    public async Task<string> PostAsJsonAsync(string item, string endpoint)
+    public async Task PutAsync<T>(string uri, T item)
     {
-        string? content;
-        HttpResponseMessage response = await _client.PostAsJsonAsync(endpoint, item);
-
-        if (response.IsSuccessStatusCode)
-        {
-            content = await response.Content.ReadAsStringAsync();
-        }
-        else
-        {
-            var error = await response.Content.ReadFromJsonAsync<Exception>();
-            throw new ArgumentException(error?.Message);
-        }
-
-        return content!;
-    }
-
-    public async Task DeleteAsync(int id, string endpoint)
-    {
-        HttpResponseMessage response = await _client.DeleteAsync(endpoint + "/" + id.ToString());
+        HttpResponseMessage response = await _client.PutAsJsonAsync(uri, item);
 
         if (!response.IsSuccessStatusCode)
         {
-            var error = await response.Content.ReadFromJsonAsync<Exception>();
-            throw new ArgumentException(error?.Message);
-        }
-    }
-
-    public async Task PutAsync<T>(T item, string endpoint)
-    {
-        HttpResponseMessage response = await _client.PutAsJsonAsync(endpoint, item);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            var error = await response.Content.ReadFromJsonAsync<Exception>();
-            throw new ArgumentException(error?.Message);
+            var error = await response.Content.ReadAsStringAsync();
+            _logger?.LogInformation("[PUT-EX] " + error);
+            throw new InvalidOperationException(error);
         }
     }
 }
