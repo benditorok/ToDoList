@@ -50,7 +50,7 @@ public class UserController : ControllerBase
         }
     }
 
-    [HttpGet("getallnotelist")]
+    [HttpGet("getallnotelists")]
     public async Task<IActionResult> GetAllNoteListAsync()
     {
         try
