@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Security.Claims;
 using ToDoList.Application.NoteLists;
 using ToDoList.Domain.Entities;
 
@@ -7,7 +10,7 @@ namespace ToDoList.WebApi.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-[Authorize]
+[Authorize(Roles = "Administrator, Manager")]
 public class NoteListController : ControllerBase
 {
     private NoteListLogic _logic;
@@ -18,13 +21,11 @@ public class NoteListController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Administrator, Manager")]
     public async Task<IActionResult> CreateAsync([FromBody] NoteList value)
     {
         try
         {
-            await _logic.CreateAsync(value);
-            return Ok();
+            return Ok(await _logic.CreateAsync(value));
         }
         catch (Exception ex)
         {
@@ -33,7 +34,6 @@ public class NoteListController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "Administrator, Manager")]
     public async Task<IActionResult> ReadAsync(int id)
     {
         try
@@ -47,7 +47,6 @@ public class NoteListController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(Roles = "Administrator, Manager")]
     public async Task<IActionResult> UpdateAsync([FromBody] NoteList value)
     {
         try
@@ -62,7 +61,6 @@ public class NoteListController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Administrator, Manager")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         try
