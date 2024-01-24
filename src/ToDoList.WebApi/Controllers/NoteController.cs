@@ -7,7 +7,7 @@ namespace ToDoList.WebApi.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-[Authorize]
+[Authorize(Roles = "Administrator, Manager")]
 public class NoteController : ControllerBase
 {
     private NoteLogic _logic;
@@ -18,13 +18,11 @@ public class NoteController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Administrator, Manager")]
     public async Task<IActionResult> CreateAsync([FromBody] Note value)
     {
         try
         {
-            await _logic.CreateAsync(value);
-            return Ok();
+            return Ok(await _logic.CreateAsync(value));
         }
         catch (Exception ex)
         {
@@ -33,7 +31,6 @@ public class NoteController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "Administrator, Manager")]
     public async Task<IActionResult> ReadAsync(int id)
     {
         try
@@ -47,7 +44,6 @@ public class NoteController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(Roles = "Administrator, Manager")]
     public async Task<IActionResult> UpdateAsync([FromBody] Note value)
     {
         try
@@ -62,7 +58,6 @@ public class NoteController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Administrator, Manager")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         try
