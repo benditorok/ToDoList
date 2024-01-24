@@ -4,6 +4,7 @@
              x:Class="ToDoList.Client.Views.NoteLists.NoteListPage"
              
              xmlns:NoteListView="clr-namespace:ToDoList.Client.Views.NoteLists"
+             xmlns:Entity="clr-namespace:ToDoList.Domain.Entities;assembly=ToDoList.Domain"
              x:DataType="NoteListView:NoteListViewModel"
              
              Title="NoteListPage">
@@ -16,7 +17,37 @@
                 Margin="0, 5"
                 Command="{Binding AddNoteListCommand}" />
 
-        <CollectionView ItemsSource="{Binding UserNoteLists}"/>
+        <CollectionView x:Name="listView"
+                        VerticalScrollBarVisibility="Always"
+                        ItemsUpdatingScrollMode="KeepItemsInView"
+                        ItemsSource="{Binding UserNoteLists}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="Entity:NoteList">
+                    <SwipeView>
+                        <SwipeView.LeftItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Delete list"
+                                           BackgroundColor="LightPink"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=RemoveNoteList}"
+                                           CommandParameter="{Binding .}"/>
+                            </SwipeItems>
+                        </SwipeView.LeftItems>
+
+                        <Grid Padding="10">
+                            <Frame>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=GotoNoteSelection}"
+                                                          CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
+                                <Label Text="{Binding Title}"
+                                       FontSize="24" />
+                            </Frame>
+                        </Grid>
+
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
     </VerticalStackLayout>
 </ContentPage>

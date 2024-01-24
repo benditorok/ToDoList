@@ -2,6 +2,7 @@
 using ToDoList.Client.Views.Identity;
 using ToDoList.Client.Views.Main;
 using ToDoList.Client.Views.NoteLists;
+using ToDoList.Client.Views.Notes;
 
 namespace ToDoList.Client.Views;
 
@@ -20,6 +21,12 @@ public static class DependencyInjection
 
         services.AddSingleton<NoteListViewModel>();
         services.AddSingleton<NoteListPage>();
+
+        services.AddTransient<NoteSelectionViewModel>();
+        services.AddTransient<NoteSelectionPage>();
+
+        services.AddTransient<NoteEditorViewModel>();
+        services.AddTransient<NoteEditorPage>();
 
         return services;
     }

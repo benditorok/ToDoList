@@ -10,7 +10,7 @@ public partial class NoteListViewModel : ObservableObject
     private AuthorizedConnectionService _connectionService;
 
     [ObservableProperty]
-    private List<NoteList> _userNoteLists = new();
+    private List<NoteList>? _userNoteLists;
 
     [ObservableProperty]
     private NoteList _newNoteList = new();
@@ -34,7 +34,7 @@ public partial class NoteListViewModel : ObservableObject
 
     private async Task RefreshUserNotes()
     {
-        UserNoteLists = await _connectionService.GetAsync<NoteList>("user/getallnotelists");
+        UserNoteLists = await _connectionService.GetAsync<List<NoteList>>("user/getallnotelists");
     }
 
     [RelayCommand]
@@ -42,7 +42,7 @@ public partial class NoteListViewModel : ObservableObject
     {
         try
         {
-            await _connectionService.PostAsync<NoteList>(NewNoteList, "user/addnotelist");
+            await _connectionService.PostAsync<NoteList>("user/addnotelist", NewNoteList);
             await Shell.Current.DisplayAlert("Alert", "Creation was successful!", "OK");
 
         }
@@ -52,8 +52,39 @@ public partial class NoteListViewModel : ObservableObject
         }
         finally
         {
+            NewNoteList = new();
             await RefreshUserNotes();
         }
+    }
+
+    [RelayCommand]
+    public async Task RemoveNoteList(NoteList noteList)
+    {
+        try
+        {
+            await _connectionService.DeleteAsync($"user/removenotelist?id={noteList.Id}");
+            await Shell.Current.DisplayAlert("Alert", "Removal was successful!", "OK");
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Alert", "Removal failed!", "OK");
+        }
+        finally
+        {
+            NewNoteList = new();
+            await RefreshUserNotes();
+        }
+    }
+
+    [RelayCommand]
+    public async Task GotoNoteSelection(NoteList noteList)
+    {
+        var navigationParameter = new ShellNavigationQueryParameters()
+        {
+            { "NoteList", noteList }
+        };
+    
+        await Shell.Current.GoToAsync($"{nameof(NoteSelectionPage)}", navigationParameter);
     }
 
     [RelayCommand]
