@@ -15,5 +15,15 @@ internal class NoteConfiguration : IEntityTypeConfiguration<Note>
         // Auto increment
         builder.Property(x => x.Id)
             .ValueGeneratedOnAdd();
+
+        // 'NotMapped'
+        builder.Ignore(x => x.NoteList);
+
+        // Constraints
+        builder.Property(x => x.Title)
+            .HasMaxLength(50);
+
+        builder.Property(x => x.Body)
+            .HasMaxLength(200);
     }
 }

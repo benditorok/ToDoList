@@ -22,5 +22,12 @@ internal class NoteListConfiguration : IEntityTypeConfiguration<NoteList>
             .WithOne(x => x.NoteList)
             .HasForeignKey(x => x.NoteListId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // Constraints
+        builder.Property(x => x.Title)
+            .HasMaxLength(50);
+
+        builder.Property(x => x.ColorRGBA)
+            .HasMaxLength(9);
     }
 }

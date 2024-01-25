@@ -16,7 +16,6 @@ public class Note : IEquatable<Note>
 
     public int NoteListId { get; set; }
 
-    // TODO add jsonIgnore and notmapped in the infrastructure?
     [JsonIgnore]
     public virtual NoteList? NoteList { get; set; }
 
