@@ -1,4 +1,6 @@
-﻿namespace ToDoList.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace ToDoList.Domain.Entities;
 
 public class Note : IEquatable<Note>
 {
@@ -14,6 +16,8 @@ public class Note : IEquatable<Note>
 
     public int NoteListId { get; set; }
 
+    // TODO add jsonIgnore and notmapped in the infrastructure?
+    [JsonIgnore]
     public virtual NoteList? NoteList { get; set; }
 
     public Note()
