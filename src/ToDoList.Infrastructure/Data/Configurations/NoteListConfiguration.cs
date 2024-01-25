@@ -25,7 +25,7 @@ internal class NoteListConfiguration : IEntityTypeConfiguration<NoteList>
 
         // Constraints
         builder.Property(x => x.Title)
-            .HasMaxLength(50);
+            .HasMaxLength(16);
 
         builder.Property(x => x.ColorRGBA)
             .HasMaxLength(9);
