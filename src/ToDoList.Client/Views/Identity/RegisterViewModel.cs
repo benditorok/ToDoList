@@ -23,7 +23,7 @@ public partial class RegisterViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task Register()
+    private async Task RegisterAsync()
     {
         try
         {
@@ -48,7 +48,7 @@ public partial class RegisterViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task GoBack()
+    private async Task GoBackAsync()
     {
         await Shell.Current.GoToAsync("..");
     }

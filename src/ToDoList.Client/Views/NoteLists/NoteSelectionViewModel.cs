@@ -17,6 +17,7 @@ public partial class NoteSelectionViewModel : ObservableObject
     [ObservableProperty]
     private Note _newNote = new();
 
+    // TODO page needs to be updated when it becomes visible
     public NoteSelectionViewModel(AuthorizedConnectionService connectionService)
     {
         _connectionService = connectionService;

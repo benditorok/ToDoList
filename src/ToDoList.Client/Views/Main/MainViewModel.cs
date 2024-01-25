@@ -10,19 +10,19 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task GotoLoginPage()
+    private async Task GotoLoginPageAsync()
     {
         await Shell.Current.GoToAsync("LoginPage");
     }
 
     [RelayCommand]
-    private async Task GotoRegisterPage()
+    private async Task GotoRegisterPageAsync()
     {
         await Shell.Current.GoToAsync("RegisterPage");
     }
 
     [RelayCommand]
-    private async Task GotoNoteListPage()
+    private async Task GotoNoteListPageAsync()
     {
         await Shell.Current.GoToAsync("NoteListPage");
     }

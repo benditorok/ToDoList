@@ -40,7 +40,7 @@ public partial class NoteListViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public async Task AddNoteList()
+    public async Task AddNoteListAsync()
     {
         try
         {
@@ -61,7 +61,7 @@ public partial class NoteListViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public async Task RemoveNoteList(NoteList noteList)
+    public async Task RemoveNoteListAsync(NoteList noteList)
     {
         try
         {
@@ -80,7 +80,7 @@ public partial class NoteListViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public async Task GotoNoteSelection(NoteList noteList)
+    public async Task GotoNoteSelectionAsync(NoteList noteList)
     {
         var navigationParameter = new ShellNavigationQueryParameters()
         {
@@ -91,7 +91,7 @@ public partial class NoteListViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task GoBack()
+    private async Task GoBackAsync()
     {
         await Shell.Current.GoToAsync("..");
     }
