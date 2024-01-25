@@ -34,7 +34,12 @@ public partial class NoteListViewModel : ObservableObject
         _connectionService = connectionService;
     }
 
-    private async Task RefreshUserNotes()
+    public async void OnPageLoaded(object? sender, EventArgs e)
+    {
+        await RefreshUserNoteListsAsync();
+    }
+
+    private async Task RefreshUserNoteListsAsync()
     {
         UserNoteLists = await _connectionService.GetAsync<List<NoteList>>("user/getallnotelists");
     }
@@ -56,7 +61,7 @@ public partial class NoteListViewModel : ObservableObject
         finally
         {
             NewNoteList = new();
-            await RefreshUserNotes();
+            await RefreshUserNoteListsAsync();
         }
     }
 
@@ -75,7 +80,7 @@ public partial class NoteListViewModel : ObservableObject
         finally
         {
             NewNoteList = new();
-            await RefreshUserNotes();
+            await RefreshUserNoteListsAsync();
         }
     }
 

@@ -23,6 +23,11 @@ public partial class NoteSelectionViewModel : ObservableObject
         _connectionService = connectionService;
     }
 
+    public async void OnPageLoaded(object? sender, EventArgs e)
+    {
+        await RefreshUserNotesAsync();
+    }
+
     [RelayCommand]
     private async Task AddNoteAsync()
     {
