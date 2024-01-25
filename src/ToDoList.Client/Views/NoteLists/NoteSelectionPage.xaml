@@ -13,9 +13,10 @@
                           Padding="30, 60, 30, 30">
         <Label Text="{Binding NoteList.Title}" />
         
-        <Label Text="Add new Title"
+        <Label Text="Add new Note"
                FontSize="24" />
-        <Entry Text="{Binding NewNote.Title}" />
+        <Entry Text="{Binding NewNote.Title}"
+               Placeholder="Title"/>
 
         <Button Text="Add"
         Margin="0, 10"
