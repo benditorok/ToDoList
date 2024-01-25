@@ -8,7 +8,7 @@ public class NoteList : IEquatable<NoteList>
 
     public string? Title { get; set; }
 
-    public Color Color { get; set; } = Color.White;
+    public string ColorRGBA { get; set; } = "#FFFFFF3F";
 
     public string? UserId { get; set; }
 
@@ -25,6 +25,6 @@ public class NoteList : IEquatable<NoteList>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Id, Title, Color, Notes);
+        return HashCode.Combine(Id, Title, ColorRGBA, UserId, Notes);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
+using ToDoList.Client.Common;
 using ToDoList.Client.Services.Connection;
 using ToDoList.Domain.Entities;
 
@@ -15,17 +17,17 @@ public partial class NoteListViewModel : ObservableObject
     [ObservableProperty]
     private NoteList _newNoteList = new();
 
-    // TODO add colors somehow
     [ObservableProperty]
-    private List<string> _availableColors = new()
+    private ObservableCollection<ColorInfo> _availableColors = new()
     {
-        "Red",
-        "Green",
-        "Blue"
+        new ColorInfo("Red", "#FF00005F"),
+        new ColorInfo("Green", "#00FF005F"),
+        new ColorInfo("Blue", "#0000FF5F"),
+        new ColorInfo("White", "#FFFFFF5F"),
     };
 
     [ObservableProperty]
-    private string? _selectedColor;
+    private ColorInfo? _selectedColor;
 
     public NoteListViewModel(AuthorizedConnectionService connectionService)
     {
@@ -42,6 +44,7 @@ public partial class NoteListViewModel : ObservableObject
     {
         try
         {
+            NewNoteList.ColorRGBA = SelectedColor?.RGBA ?? "#FFFFFF5F";
             await _connectionService.PostAsync<NoteList>("user/addnotelist", NewNoteList);
             await Shell.Current.DisplayAlert("Alert", "Creation was successful!", "OK");
 

@@ -5,13 +5,24 @@
              
              xmlns:NoteListView="clr-namespace:ToDoList.Client.Views.NoteLists"
              xmlns:Entity="clr-namespace:ToDoList.Domain.Entities;assembly=ToDoList.Domain"
+             xmlns:Common="clr-namespace:ToDoList.Client.Common"
              x:DataType="NoteListView:NoteListViewModel"
              
              Title="NoteListPage">
+
+    <ContentPage.Resources>
+        <Common:ColorConverter x:Key="ColorConverter" />
+    </ContentPage.Resources>
     
     <VerticalStackLayout Padding="30">
-        <Entry Placeholder="Add a new Title" 
+        <Entry Placeholder="Add a new Title"
                Text="{Binding NewNoteList.Title}"/>
+
+        <Picker Title="Select a color"
+                ItemsSource="{Binding AvailableColors}"
+                SelectedItem="{Binding SelectedColor}"
+                SelectedIndex="{Binding AvailableColors}">
+        </Picker>
 
         <Button Text="Add"
                 Margin="0, 5"
@@ -29,18 +40,21 @@
                                 <SwipeItem Text="Delete list"
                                            BackgroundColor="LightPink"
                                            Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=RemoveNoteList}"
-                                           CommandParameter="{Binding .}"/>
+                                           CommandParameter="{Binding ColorRGBA}"/>
                             </SwipeItems>
                         </SwipeView.LeftItems>
 
-                        <Grid Padding="10">
+                        <Grid>
                             <Frame>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=GotoNoteSelection}"
-                                                          CommandParameter="{Binding .}"/>
+                                                          CommandParameter="{Binding .}" />
+                                    <PointerGestureRecognizer PointerPressedCommand="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=GotoNoteSelection}"
+                                                              PointerPressedCommandParameter="{Binding .}"/>
                                 </Frame.GestureRecognizers>
                                 <Label Text="{Binding Title}"
-                                       FontSize="24" />
+                                       FontSize="24"
+                                       BackgroundColor="{Binding ColorRGBA, Converter={StaticResource ColorConverter}}"/>
                             </Frame>
                         </Grid>
 
