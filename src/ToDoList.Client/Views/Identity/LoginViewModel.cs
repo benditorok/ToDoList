@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 using ToDoList.Client.Services.Connection;
 
 namespace ToDoList.Client.Views.Identity;
@@ -7,6 +8,7 @@ namespace ToDoList.Client.Views.Identity;
 public partial class LoginViewModel : ObservableObject
 {
     private AuthorizedConnectionService _connectionService;
+    private ILogger<LoginViewModel>? _logger;
 
     [ObservableProperty]
     private string? _username;
@@ -17,9 +19,10 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty]
     private string? _message;
 
-    public LoginViewModel(AuthorizedConnectionService connectionService)
+    public LoginViewModel(AuthorizedConnectionService connectionService, ILogger<LoginViewModel>? logger)
     {
         _connectionService = connectionService;
+        _logger = logger;
     }
 
     [RelayCommand]
@@ -38,6 +41,7 @@ public partial class LoginViewModel : ObservableObject
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Alert", "Login failed!!", "OK");
+            _logger?.LogInformation("[VM-LOGIN-EX] {ex}", ex.Message);
             Message = ex.Message;
         }
         finally

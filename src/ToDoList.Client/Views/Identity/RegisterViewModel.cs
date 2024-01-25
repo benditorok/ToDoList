@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 using ToDoList.Client.Services.Connection;
 
 namespace ToDoList.Client.Views.Identity;
@@ -7,6 +8,7 @@ namespace ToDoList.Client.Views.Identity;
 public partial class RegisterViewModel : ObservableObject
 {
     private AuthorizedConnectionService _connectionService;
+    private ILogger<RegisterViewModel>? _logger;
 
     [ObservableProperty]
     private string? _username;
@@ -17,9 +19,10 @@ public partial class RegisterViewModel : ObservableObject
     [ObservableProperty]
     private string? _message;
 
-    public RegisterViewModel(AuthorizedConnectionService connectionService)
+    public RegisterViewModel(AuthorizedConnectionService connectionService, ILogger<RegisterViewModel>? logger)
     {
         _connectionService = connectionService;
+        _logger = logger;
     }
 
     [RelayCommand]
@@ -38,6 +41,7 @@ public partial class RegisterViewModel : ObservableObject
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Alert", "Registration failed!", "OK");
+            _logger?.LogInformation("[VM-REGISTER-EX] {ex}", ex.Message);
             Message = ex.Message;
         }
         finally

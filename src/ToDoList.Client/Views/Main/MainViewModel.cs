@@ -1,12 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 
 namespace ToDoList.Client.Views.Main;
 
 public partial class MainViewModel : ObservableObject
 {
-    public MainViewModel()
+    private ILogger<MainViewModel>? _logger;
+
+    public MainViewModel(ILogger<MainViewModel>? logger)
     { 
+        _logger = logger;
     }
 
     [RelayCommand]

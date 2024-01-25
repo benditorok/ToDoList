@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
 using ToDoList.Client.Common;
 using ToDoList.Client.Services.Connection;
@@ -10,6 +11,7 @@ namespace ToDoList.Client.Views.NoteLists;
 public partial class NoteListViewModel : ObservableObject
 {
     private AuthorizedConnectionService _connectionService;
+    private ILogger<NoteListViewModel>? _logger;
 
     [ObservableProperty]
     private List<NoteList>? _userNoteLists;
@@ -29,9 +31,10 @@ public partial class NoteListViewModel : ObservableObject
     [ObservableProperty]
     private ColorInfo? _selectedColor;
 
-    public NoteListViewModel(AuthorizedConnectionService connectionService)
+    public NoteListViewModel(AuthorizedConnectionService connectionService, ILogger<NoteListViewModel>? logger)
     {
         _connectionService = connectionService;
+        _logger = logger;
     }
 
     public async void OnPageLoaded(object? sender, EventArgs e)
@@ -42,6 +45,7 @@ public partial class NoteListViewModel : ObservableObject
     private async Task RefreshUserNoteListsAsync()
     {
         UserNoteLists = await _connectionService.GetAsync<List<NoteList>>("user/getallnotelists");
+        _logger?.LogInformation("[VM-NOTELIST] RefreshUserNoteLists");
     }
 
     [RelayCommand]
@@ -57,6 +61,7 @@ public partial class NoteListViewModel : ObservableObject
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Alert", "Creation failed!", "OK");
+            _logger?.LogInformation("[VM-NOTELIST-EX] {ex}", ex.Message);
         }
         finally
         {
@@ -76,6 +81,7 @@ public partial class NoteListViewModel : ObservableObject
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Alert", "Removal failed!", "OK");
+            _logger?.LogInformation("[VM-NOTELIST-EX] {ex}", ex.Message);
         }
         finally
         {
