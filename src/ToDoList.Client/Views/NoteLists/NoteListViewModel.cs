@@ -84,7 +84,7 @@ public partial class NoteListViewModel : ObservableObject
     {
         var navigationParameter = new ShellNavigationQueryParameters()
         {
-            { "NoteList", noteList }
+            { "UserNoteList", noteList }
         };
     
         await Shell.Current.GoToAsync($"{nameof(NoteSelectionPage)}", navigationParameter);

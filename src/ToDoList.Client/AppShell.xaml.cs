@@ -14,6 +14,8 @@ public partial class AppShell : Shell
         // Identity
         Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
         Routing.RegisterRoute(nameof(RegisterPage), typeof(RegisterPage));
+
+        // Pages
         Routing.RegisterRoute(nameof(NoteListPage), typeof(NoteListPage));
         Routing.RegisterRoute(nameof(NoteSelectionPage), typeof(NoteSelectionPage));
         Routing.RegisterRoute(nameof(NoteEditorPage), typeof(NoteEditorPage));

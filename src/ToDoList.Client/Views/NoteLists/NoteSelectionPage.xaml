@@ -8,39 +8,41 @@
              x:DataType="NoteListView:NoteSelectionViewModel"
              
              Title="NoteSelectionPage">
+    
     <VerticalStackLayout  Margin="15"
                           Padding="30, 60, 30, 30">
+        <Label Text="{Binding NoteList.Title}" />
         
+        <Label Text="Add new Title"
+               FontSize="24" />
+        <Entry Text="{Binding NewNote.Title}" />
+
+        <Button Text="Add"
+        Margin="0, 10"
+        BackgroundColor="LightGreen" 
+        Command="{Binding AddNoteCommand}" />
+
         <CollectionView x:Name="listView"
                 VerticalScrollBarVisibility="Always"
                 ItemsUpdatingScrollMode="KeepItemsInView"
                 ItemsSource="{Binding NoteList.Notes}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="Entity:Note">
-                    <SwipeView>
-                        <SwipeView.LeftItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Delete"
-                                   BackgroundColor="LightPink"
-                                   Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=RemoveNoteList}"
-                                   CommandParameter="{Binding .}"/>
-                            </SwipeItems>
-                        </SwipeView.LeftItems>
+                    <Grid>
+                        <Label Text="{Binding Title}"
+                               FontSize="24">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteSelectionViewModel}}, Path=GotoNoteEditorCommand}"
+                                                      CommandParameter="{Binding .}" />
 
-                        <Grid Padding="10">
-                            <Frame>
-                                <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteSelectionViewModel}}, Path=GotoNoteSelection}"
-                                                  CommandParameter="{Binding .}"/>
-                                </Frame.GestureRecognizers>
-                                <Label Text="{Binding Title}"
-                               FontSize="24" />
-                            </Frame>
-                        </Grid>
-
-                    </SwipeView>
+                                <PointerGestureRecognizer PointerReleasedCommand="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteSelectionViewModel}}, Path=GotoNoteEditorCommand}"
+                                                          PointerReleasedCommandParameter="{Binding .}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+        
     </VerticalStackLayout>
 </ContentPage>

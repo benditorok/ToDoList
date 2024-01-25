@@ -21,8 +21,7 @@
         <Picker Title="Select a color"
                 ItemsSource="{Binding AvailableColors}"
                 SelectedItem="{Binding SelectedColor}"
-                SelectedIndex="{Binding AvailableColors}">
-        </Picker>
+                SelectedIndex="{Binding AvailableColors}" />
 
         <Button Text="Add"
                 Margin="0, 5"
@@ -34,31 +33,19 @@
                         ItemsSource="{Binding UserNoteLists}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="Entity:NoteList">
-                    <SwipeView>
-                        <SwipeView.LeftItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Delete list"
-                                           BackgroundColor="LightPink"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=RemoveNoteList}"
-                                           CommandParameter="{Binding ColorRGBA}"/>
-                            </SwipeItems>
-                        </SwipeView.LeftItems>
-
                         <Grid>
-                            <Frame>
-                                <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=GotoNoteSelection}"
+                            <Label Text="{Binding Title}"
+                                   FontSize="24"
+                                   BackgroundColor="{Binding ColorRGBA, Converter={StaticResource ColorConverter}}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=GotoNoteSelectionCommand}"
                                                           CommandParameter="{Binding .}" />
-                                    <PointerGestureRecognizer PointerPressedCommand="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=GotoNoteSelection}"
-                                                              PointerPressedCommandParameter="{Binding .}"/>
-                                </Frame.GestureRecognizers>
-                                <Label Text="{Binding Title}"
-                                       FontSize="24"
-                                       BackgroundColor="{Binding ColorRGBA, Converter={StaticResource ColorConverter}}"/>
-                            </Frame>
-                        </Grid>
 
-                    </SwipeView>
+                                    <PointerGestureRecognizer PointerReleasedCommand="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=GotoNoteSelectionCommand}"
+                                                              PointerReleasedCommandParameter="{Binding .}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
