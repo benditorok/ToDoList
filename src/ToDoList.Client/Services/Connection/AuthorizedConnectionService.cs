@@ -11,10 +11,7 @@ using System.Threading.Tasks;
 namespace ToDoList.Client.Services.Connection;
 public class AuthorizedConnectionService : ConnectionService
 {
-    private string? _tokenType;
-    private string? _accessToken;
-    private string? _refreshToken;
-    private int _expiresIn = int.MaxValue;
+    private TokenInfo _userTokenInfo;
     private Timer? _refreshTimer;
 
     // TODO add logic
@@ -22,8 +19,9 @@ public class AuthorizedConnectionService : ConnectionService
 
     public string? UserName { get; private set; }
 
-    public AuthorizedConnectionService(ConnectionData connectionData, ILogger<ConnectionService>? logger) : base(connectionData, logger)
+    public AuthorizedConnectionService(ConnectionData connectionData, ILogger<ConnectionService>? logger, TokenInfo tokenInfo) : base(connectionData, logger)
     {
+        _userTokenInfo = tokenInfo;
     }
 
     /// <summary>
@@ -31,7 +29,7 @@ public class AuthorizedConnectionService : ConnectionService
     /// </summary>
     private async Task UpdateHeaderToken()
     {
-        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_tokenType!, _accessToken);
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_userTokenInfo.TokenType!, _userTokenInfo.AccessToken!);
 
         var userName = await GetAsync<string?>("user/getuserinfo");
         UserName = userName != null ? userName : throw new ArgumentNullException(nameof(userName));
@@ -50,7 +48,7 @@ public class AuthorizedConnectionService : ConnectionService
         {
             var requestData = new
             {
-                refreshToken = _refreshToken
+                refreshToken = _userTokenInfo.RefreshToken
             };
 
             string jsonData = JsonSerializer.Serialize(requestData);
@@ -67,10 +65,10 @@ public class AuthorizedConnectionService : ConnectionService
                 JsonElement root = doc.RootElement;
 
                 // Set token data
-                _tokenType = root.GetProperty("tokenType").GetString();
-                _accessToken = root.GetProperty("accessToken").GetString();
-                _refreshToken = root.GetProperty("refreshToken").GetString();
-                _expiresIn = root.GetProperty("expiresIn").GetInt32() * 1000;
+                _userTokenInfo.TokenType = root.GetProperty("tokenType").GetString();
+                _userTokenInfo.AccessToken = root.GetProperty("accessToken").GetString();
+                _userTokenInfo.RefreshToken = root.GetProperty("refreshToken").GetString();
+                _userTokenInfo.ExpiresIn = root.GetProperty("expiresIn").GetInt32() * 1000;
 
                 // Update the token of the header
                 await UpdateHeaderToken();
@@ -82,7 +80,7 @@ public class AuthorizedConnectionService : ConnectionService
         }
         finally
         {
-            _refreshTimer?.Change(_expiresIn, Timeout.Infinite);
+            _refreshTimer?.Change(_userTokenInfo.ExpiresIn, Timeout.Infinite);
         }
     }
 
@@ -119,16 +117,16 @@ public class AuthorizedConnectionService : ConnectionService
             JsonElement root = doc.RootElement;
 
             // Set token data
-            _tokenType = root.GetProperty("tokenType").GetString();
-            _accessToken = root.GetProperty("accessToken").GetString();
-            _refreshToken = root.GetProperty("refreshToken").GetString();
-            _expiresIn = root.GetProperty("expiresIn").GetInt32() * 1000;
+            _userTokenInfo.TokenType = root.GetProperty("tokenType").GetString();
+            _userTokenInfo.AccessToken = root.GetProperty("accessToken").GetString();
+            _userTokenInfo.RefreshToken = root.GetProperty("refreshToken").GetString();
+            _userTokenInfo.ExpiresIn = root.GetProperty("expiresIn").GetInt32() * 1000;
 
             // Update the token of the header
             await UpdateHeaderToken();
 
             // Create a timer to refresh the access token
-            _refreshTimer = new Timer(async x => await RefreshTokenAsync(), null, _expiresIn, Timeout.Infinite);
+            _refreshTimer = new Timer(async x => await RefreshTokenAsync(), null, _userTokenInfo.ExpiresIn, Timeout.Infinite);
 
             _logger?.LogInformation("[AUTH] Login successful");
         }
@@ -164,5 +162,15 @@ public class AuthorizedConnectionService : ConnectionService
             _logger?.LogInformation("[AUTH-EX] (Registration failed) {msg}", error);
             throw new InvalidOperationException(error);
         }
+    }
+
+    public void LogoutClearToken()
+    {
+        IsLoggedIn = false;
+        UserName = null;
+        _userTokenInfo = new();
+        _client.DefaultRequestHeaders.Authorization = null;
+
+        _logger?.LogInformation("[AUTH] Logged out");
     }
 }

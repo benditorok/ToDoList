@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using ToDoList.Client.Services;
 using ToDoList.Client.Services.Connection;
 using ToDoList.Client.Views;
 
@@ -21,15 +22,10 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-#if ANDROID
-        builder.Services.AddSingleton<ConnectionData>(_ => new("http://10.0.2.2:8080/", "Status"));
-#else
-        builder.Services.AddSingleton<ConnectionData>(_ => new("http://localhost:8080/", "Status"));
-#endif
 
-        builder.Services.AddSingleton<AuthorizedConnectionService>();
 
         builder.Services
+            .AddServices()
             .AddViews();
 
         return builder.Build();
