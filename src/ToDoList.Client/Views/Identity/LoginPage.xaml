@@ -33,6 +33,11 @@
                 BackgroundColor="Salmon" 
                 Command="{Binding LoginCommand}" />
 
+        <Button Text="No account? Register here!"
+                Margin="0, 5"
+                BackgroundColor="LightSlateGrey" 
+                Command="{Binding GotoRegisterPageCommand}" />
+        
         <Button Text="Go back to Home"
                 Margin="0, 5"
                 BackgroundColor="LightGrey" 

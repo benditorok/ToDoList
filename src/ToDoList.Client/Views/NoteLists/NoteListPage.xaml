@@ -7,6 +7,7 @@
              xmlns:Entity="clr-namespace:ToDoList.Domain.Entities;assembly=ToDoList.Domain"
              xmlns:Common="clr-namespace:ToDoList.Client.Common"
              x:DataType="NoteListView:NoteListViewModel"
+             NavigationPage.HasBackButton="False"
              
              Title="NoteListPage">
 

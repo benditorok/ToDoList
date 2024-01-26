@@ -13,6 +13,9 @@ public static class DependencyInjection
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<MainPage>();
 
+        services.AddSingleton<AccountViewModel>();
+        services.AddSingleton<AccountPage>();
+
         services.AddTransient<LoginViewModel>();
         services.AddTransient<LoginPage>();
 

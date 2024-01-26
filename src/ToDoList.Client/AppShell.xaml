@@ -6,13 +6,17 @@
     
     xmlns:local="clr-namespace:ToDoList.Client"
     xmlns:MainView="clr-namespace:ToDoList.Client.Views.Main"
+    xmlns:IdentityView="clr-namespace:ToDoList.Client.Views.Identity"
     
-    Shell.FlyoutBehavior="Disabled"
+    Shell.FlyoutBehavior="Flyout"
     Title="ToDoList">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate MainView:MainPage}"
-        Route="MainPage" />
+    <FlyoutItem Title="Home">
+        <ShellContent ContentTemplate="{DataTemplate MainView:MainPage}" />
+    </FlyoutItem>
 
+    <FlyoutItem Title="Account">
+        <ShellContent ContentTemplate="{DataTemplate IdentityView:AccountPage}" />
+    </FlyoutItem>
+    
 </Shell>

@@ -52,6 +52,12 @@ public partial class LoginViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task GotoRegisterPageAsync()
+    {
+        await Shell.Current.GoToAsync(nameof(RegisterPage));
+    }
+
+    [RelayCommand]
     private async Task GoBackAsync()
     {
         await Shell.Current.GoToAsync("..");

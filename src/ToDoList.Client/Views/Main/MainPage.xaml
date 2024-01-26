@@ -5,27 +5,7 @@
              
              xmlns:MainView="clr-namespace:ToDoList.Client.Views.Main"
              x:DataType="MainView:MainViewModel"
+             NavigationPage.HasBackButton="False"
              
              Title="Home">
-    
-    <VerticalStackLayout Padding="30">
-        <Label Text="Welcome,"
-               FontSize="34"/>
-
-        <Button Text="Register"
-                Margin="0, 10"
-                BackgroundColor="LightBlue" 
-                Command="{Binding GotoRegisterPageCommand}" />
-
-        <Button Text="Login"
-                Margin="0, 10"
-                BackgroundColor="LightGreen" 
-                Command="{Binding GotoLoginPageCommand}" />
-
-        <Button Text="Note lists"
-                Margin="0, 10"
-                BackgroundColor="LightCoral" 
-                Command="{Binding GotoNoteListPageCommand}" />
-
-    </VerticalStackLayout>
 </ContentPage>

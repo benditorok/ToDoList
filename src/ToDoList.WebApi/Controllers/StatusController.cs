@@ -7,8 +7,8 @@ namespace ToDoList.WebApi.Controllers;
 public class StatusController : ControllerBase
 {
     [HttpGet, HttpPost]
-    public IActionResult Get()
+    public Task<IActionResult> Get()
     {
-        return Ok();
+        return Task.FromResult<IActionResult>(Ok());
     }
 }

@@ -17,6 +17,11 @@ public class AuthorizedConnectionService : ConnectionService
     private int _expiresIn = int.MaxValue;
     private Timer? _refreshTimer;
 
+    // TODO add logic
+    public bool IsLoggedIn { get; private set; } = false;
+
+    public string? UserName { get; private set; }
+
     public AuthorizedConnectionService(ConnectionData connectionData, ILogger<ConnectionService>? logger) : base(connectionData, logger)
     {
     }
@@ -24,9 +29,14 @@ public class AuthorizedConnectionService : ConnectionService
     /// <summary>
     /// Set the access token of the http header.
     /// </summary>
-    private void UpdateHeaderToken()
+    private async Task UpdateHeaderToken()
     {
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(_tokenType!, _accessToken);
+
+        var userName = await GetAsync<string?>("user/getuserinfo");
+        UserName = userName != null ? userName : throw new ArgumentNullException(nameof(userName));
+        IsLoggedIn = true;
+
         _logger?.LogInformation("[AUTH] Updated bearer token");
     }
 
@@ -63,7 +73,7 @@ public class AuthorizedConnectionService : ConnectionService
                 _expiresIn = root.GetProperty("expiresIn").GetInt32() * 1000;
 
                 // Update the token of the header
-                UpdateHeaderToken();
+                await UpdateHeaderToken();
             }
         }
         catch (Exception)
@@ -115,7 +125,7 @@ public class AuthorizedConnectionService : ConnectionService
             _expiresIn = root.GetProperty("expiresIn").GetInt32() * 1000;
 
             // Update the token of the header
-            UpdateHeaderToken();
+            await UpdateHeaderToken();
 
             // Create a timer to refresh the access token
             _refreshTimer = new Timer(async x => await RefreshTokenAsync(), null, _expiresIn, Timeout.Infinite);

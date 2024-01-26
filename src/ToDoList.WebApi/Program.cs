@@ -8,6 +8,8 @@ using ToDoList.Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// TODO add logging
+
 // Add Application and Infrastructure
 builder.Services
     .AddApplication()

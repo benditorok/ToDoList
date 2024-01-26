@@ -11,15 +11,15 @@ using ToDoList.Domain.Entities;
 
 namespace ToDoList.WebApi.Controllers;
 
-[Route("[controller]")]
+[Route("user")]
 [ApiController]
 [Authorize]
-public class UserController : ControllerBase
+public class UserInteractionController : ControllerBase
 {
     private NoteListLogic _noteListLogic;
     private NoteLogic _noteLogic;
 
-    public UserController(NoteListLogic noteListLogic, NoteLogic noteLogic)
+    public UserInteractionController(NoteListLogic noteListLogic, NoteLogic noteLogic)
     {
         _noteListLogic = noteListLogic;
         _noteLogic = noteLogic;
@@ -223,6 +223,28 @@ public class UserController : ControllerBase
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("getuserinfo")]
+    public Task<IActionResult> GetUserInfoAsync()
+    {
+        try
+        {
+            var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (user != null)
+            {
+                return Task.FromResult<IActionResult>(Ok(user.Value));
+            }
+            else
+            {
+                return Task.FromResult<IActionResult>(Forbid());
+            }
+        }
+        catch (Exception ex)
+        {
+            return Task.FromResult<IActionResult>(BadRequest(ex.Message));
         }
     }
 }
