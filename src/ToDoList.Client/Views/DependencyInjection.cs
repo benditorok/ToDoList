@@ -10,11 +10,11 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddViews(this IServiceCollection services)
     {
-        services.AddSingleton<MainViewModel>();
-        services.AddSingleton<MainPage>();
+        services.AddTransient<MainViewModel>();
+        services.AddTransient<MainPage>();
 
-        services.AddSingleton<AccountViewModel>();
-        services.AddSingleton<AccountPage>();
+        services.AddTransient<AccountViewModel>();
+        services.AddTransient<AccountPage>();
 
         services.AddTransient<LoginViewModel>();
         services.AddTransient<LoginPage>();
@@ -22,8 +22,8 @@ public static class DependencyInjection
         services.AddTransient<RegisterViewModel>();
         services.AddTransient<RegisterPage>();
 
-        services.AddSingleton<NoteListViewModel>();
-        services.AddSingleton<NoteListPage>();
+        services.AddTransient<NoteListViewModel>();
+        services.AddTransient<NoteListPage>();
 
         services.AddTransient<NoteSelectionViewModel>();
         services.AddTransient<NoteSelectionPage>();

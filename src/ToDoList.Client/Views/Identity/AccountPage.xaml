@@ -8,19 +8,29 @@
              NavigationPage.HasBackButton="False"
              
              Title="AccountPage">
+    
     <VerticalStackLayout>
         
         <Label Text="{Binding UserName, StringFormat='Welcome, {0}'}" 
-               FontSize="32"/>
+               FontSize="32"
+               IsVisible="{Binding IsLoggedIn}" />
 
         <Button Text="Log in"
                 Margin="0, 5"
                 BackgroundColor="LightGreen" 
-                Command="{Binding GotoLoginPageCommand}" />
+                Command="{Binding GotoLoginPageCommand}"
+                IsVisible="{Binding IsLoggedInInverted}" />
+
+        <Button Text="Log out"
+                Margin="0, 5"
+                BackgroundColor="LightSalmon" 
+                Command="{Binding LogoutCommand}"
+                IsVisible="{Binding IsLoggedIn}"/>
 
         <Button Text="Go back to Home"
                 Margin="0, 5"
                 BackgroundColor="LightGrey" 
-                Command="{Binding GotoMainPageCommand}" />
+                Command="{Binding GotoMainPageCommand}"
+                IsVisible="{Binding IsLoggedIn}"/>
     </VerticalStackLayout>
 </ContentPage>

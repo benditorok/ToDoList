@@ -43,13 +43,11 @@ public partial class NoteSelectionViewModel : ObservableObject
         {
             await _connectionService.PostAsync<Note>($"user/addnote?listId={NoteList?.Id}", NewNote);
             await Shell.Current.DisplayAlert("Alert", "Creation was successful!", "OK");
-
         }
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Alert", "Creation failed!", "OK");
             _logger?.LogInformation("[VM-NOTESELECTION-EX] {ex}", ex.Message);
-
         }
         finally
         {

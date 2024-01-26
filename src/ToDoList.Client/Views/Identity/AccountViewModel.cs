@@ -12,7 +12,13 @@ public partial class AccountViewModel : ObservableObject
     private ILogger<AccountViewModel>? _logger;
 
     [ObservableProperty]
-    private string? _userName = "Please log in!";
+    private string? _userName = "";
+
+    [ObservableProperty]
+    private bool _isLoggedIn = false;
+
+    [ObservableProperty]
+    private bool _isLoggedInInverted = true;
 
     public AccountViewModel(AuthorizedConnectionService connectionService, ILogger<AccountViewModel>? logger) 
     {
@@ -22,14 +28,33 @@ public partial class AccountViewModel : ObservableObject
 
     public void OnPageLoaded(object? sender, EventArgs e)
     {
+        // TODO make the inverted val another way
         if (_connectionService.IsLoggedIn)
         {
             UserName = _connectionService.UserName;
+            IsLoggedIn = true;
+            IsLoggedInInverted = false;
         }
-        //else
-        //{
-        //    await Shell.Current.GoToAsync(nameof(LoginPage));
-        //}
+        else
+        {
+            IsLoggedIn = false;
+            IsLoggedInInverted = true;
+        }
+    }
+
+    [RelayCommand]
+    private void Logout()
+    {
+        _connectionService.LogoutClearToken();
+        IsLoggedIn = false;
+        IsLoggedInInverted = true;
+
+        var stack = Shell.Current.Navigation.NavigationStack.ToArray();
+
+        for (int i = stack.Length - 1; i > 0; i--)
+        {
+            Shell.Current.Navigation.RemovePage(stack[i]);
+        }
     }
 
     [RelayCommand]
@@ -41,6 +66,13 @@ public partial class AccountViewModel : ObservableObject
     [RelayCommand]
     private async Task GotoMainPageAsync()
     {
+        var stack = Shell.Current.Navigation.NavigationStack.ToArray();
+
+        for (int i = stack.Length - 1; i > 0; i--)
+        {
+            Shell.Current.Navigation.RemovePage(stack[i]);
+        }
+
         await Shell.Current.GoToAsync(nameof(MainPage));
     }
 }
