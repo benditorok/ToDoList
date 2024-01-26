@@ -20,7 +20,7 @@
 
         <Button Grid.Row="0"
                 Grid.Column="1"
-                Text="Quck add"
+                Text="Quick add"
                 Margin="5"
                 BackgroundColor="LightGreen" 
                 Command="{Binding QuickAddNoteCommand}" />

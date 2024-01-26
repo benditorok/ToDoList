@@ -12,6 +12,7 @@ public partial class MainViewModel : ObservableObject
 {
     private AuthorizedConnectionService _connectionService;
     private ILogger<MainViewModel>? _logger;
+    private static SemaphoreSlim _sm = new SemaphoreSlim(1, 1);
 
     [ObservableProperty]
     private NoteList? _userToDoList;
@@ -48,26 +49,40 @@ public partial class MainViewModel : ObservableObject
     {
         try
         {
-            string title = "ToDoList";
+            const string title = "ToDoList";
 
             if (UserToDoList == null)
             {
-                var userLists = await _connectionService.GetAsync<List<NoteList>>("user/getallnotelists");
-                var list = userLists?.OrderBy(x => x.Id).FirstOrDefault(x => x.Title == title);
+                List<NoteList>? userLists;
+                NoteList? todoList;
 
-                if (list != null)
+                await _sm.WaitAsync();
+
+                try
                 {
-                    UserToDoList = list;
+                    userLists = await _connectionService.GetAsync<List<NoteList>>("user/getallnotelists");
+                    todoList = userLists?.OrderBy(x => x.Id).FirstOrDefault(x => x.Title == title);
+
+                    if (todoList != null)
+                    {
+                        UserToDoList = todoList;
+                    }
+                    else
+                    {
+                        NoteList newTodoList = new() { Title = title };
+                        await _connectionService.PostAsync<NoteList>("user/addnotelist", newTodoList);
+                    }
                 }
-                else
+                finally
                 {
-                    NoteList newToDoList = new() { Title = title };
-                    await _connectionService.PostAsync<NoteList>("user/addnotelist", newToDoList);
+                    _sm.Release();
+                }
 
+                if(todoList == null)
+                {
                     await LoadToDoListAsync();
                 }
             }
-            
         }
         catch (Exception ex)
         {

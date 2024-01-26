@@ -22,7 +22,7 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-
+        // TODO remove pages after navigating between account and main page
 
         builder.Services
             .AddServices()
