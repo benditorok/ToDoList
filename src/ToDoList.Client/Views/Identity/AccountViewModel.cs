@@ -66,13 +66,6 @@ public partial class AccountViewModel : ObservableObject
     [RelayCommand]
     private async Task GotoMainPageAsync()
     {
-        var stack = Shell.Current.Navigation.NavigationStack.ToArray();
-
-        for (int i = stack.Length - 1; i > 0; i--)
-        {
-            Shell.Current.Navigation.RemovePage(stack[i]);
-        }
-
-        await Shell.Current.GoToAsync(nameof(MainPage));
+        await Shell.Current.GoToAsync("//MainPage");
     }
 }

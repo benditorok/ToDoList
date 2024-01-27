@@ -34,14 +34,8 @@ public partial class MainViewModel : ObservableObject
         }
         else
         {
-            var stack = Shell.Current.Navigation.NavigationStack.ToArray();
-
-            for (int i = stack.Length - 1; i > 0; i--)
-            {
-                Shell.Current.Navigation.RemovePage(stack[i]);
-            }
-
-            await Shell.Current.GoToAsync(nameof(AccountPage));
+            await Shell.Current.GoToAsync("//AccountPage");
+            //await Shell.Current.GoToAsync($"//{nameof(AccountPage)}");
         }
     }
 
@@ -49,40 +43,38 @@ public partial class MainViewModel : ObservableObject
     {
         try
         {
-            const string title = "ToDoList";
+            UserToDoList = await _connectionService.GetAsync<NoteList>("user/gettodolist");
 
-            if (UserToDoList == null)
-            {
-                List<NoteList>? userLists;
-                NoteList? todoList;
+            //const string title = "ToDoList";
 
-                await _sm.WaitAsync();
+            //NoteList? todoList;
 
-                try
-                {
-                    userLists = await _connectionService.GetAsync<List<NoteList>>("user/getallnotelists");
-                    todoList = userLists?.OrderBy(x => x.Id).FirstOrDefault(x => x.Title == title);
+            //await _sm.WaitAsync();
 
-                    if (todoList != null)
-                    {
-                        UserToDoList = todoList;
-                    }
-                    else
-                    {
-                        NoteList newTodoList = new() { Title = title };
-                        await _connectionService.PostAsync<NoteList>("user/addnotelist", newTodoList);
-                    }
-                }
-                finally
-                {
-                    _sm.Release();
-                }
+            //try
+            //{
+            //    todoList = await _connectionService.GetAsync<NoteList>("user/synctodolist");
 
-                if(todoList == null)
-                {
-                    await LoadToDoListAsync();
-                }
-            }
+            //    if (todoList != null)
+            //    {
+            //        UserToDoList = todoList;
+            //    }
+            //    else
+            //    {
+            //        NoteList newTodoList = new() { Title = title };
+            //        await _connectionService.PostAsync<NoteList>("user/addnotelist", newTodoList);
+            //    }
+            //}
+            //finally
+            //{
+            //    _sm.Release();
+            //}
+
+            //if (todoList == null)
+            //{
+            //    await LoadToDoListAsync();
+            //}
+
         }
         catch (Exception ex)
         {

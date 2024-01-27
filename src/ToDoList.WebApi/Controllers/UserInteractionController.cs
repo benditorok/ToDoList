@@ -98,6 +98,39 @@ public class UserInteractionController : ControllerBase
         }
     }
 
+    [HttpGet("gettodolist")]
+    public async Task<IActionResult> GetToDoListAsync()
+    {
+        // Name of the user's todo list.
+        // If the user deletes it this will create a new one and assign it to the user.
+        const string title = "ToDoList";
+
+        try
+        {
+            var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (user == null)
+            {
+                return Forbid();
+            }
+
+            var item = (user != null) ? await _noteListLogic.ReadAll()
+                .FirstOrDefaultAsync(x => x.UserId == user.Value && x.Title == title) : null;
+
+            if (item == null)
+            {
+                int todolistId = await _noteListLogic.CreateAsync(new() { Title = title, UserId = user?.Value });
+                item = await _noteListLogic.ReadAsync(todolistId);
+            }
+
+            return Ok(item);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpPut("updatenotelist")]
     public async Task<IActionResult> UpdateNoteListAsync([FromBody] NoteList value)
     {

@@ -12,11 +12,13 @@
     Title="ToDoList">
 
     <FlyoutItem Title="Home">
-        <ShellContent ContentTemplate="{DataTemplate MainView:MainPage}" />
+        <ShellContent ContentTemplate="{DataTemplate MainView:MainPage}"
+                      Route="MainPage"/>
     </FlyoutItem>
 
     <FlyoutItem Title="Account">
-        <ShellContent ContentTemplate="{DataTemplate IdentityView:AccountPage}" />
+        <ShellContent ContentTemplate="{DataTemplate IdentityView:AccountPage}"
+                      Route="AccountPage"/>
     </FlyoutItem>
     
 </Shell>
