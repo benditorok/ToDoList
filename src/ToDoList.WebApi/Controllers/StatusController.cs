@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ToDoList.WebApi.Controllers;
 
@@ -6,9 +7,19 @@ namespace ToDoList.WebApi.Controllers;
 [ApiController]
 public class StatusController : ControllerBase
 {
+    private ILogger<StatusController> _logger;
+
+    public StatusController(ILogger<StatusController> logger)
+    {
+        _logger = logger; 
+    }
+
+    // TODO make this better
     [HttpGet, HttpPost]
     public Task<IActionResult> Get()
     {
+        var ip = HttpContext.Connection.RemoteIpAddress;
+        _logger?.LogInformation("Status pinged from {id}", ip?.ToString());
         return Task.FromResult<IActionResult>(Ok());
     }
 }

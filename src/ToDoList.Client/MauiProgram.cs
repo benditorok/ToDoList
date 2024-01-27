@@ -4,6 +4,7 @@ using ToDoList.Client.Services.Connection;
 using ToDoList.Client.Views;
 
 namespace ToDoList.Client;
+
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
@@ -21,8 +22,6 @@ public static class MauiProgram
         builder.Logging.SetMinimumLevel(LogLevel.Information);
         builder.Logging.AddDebug();
 #endif
-
-        // TODO remove pages after navigating between account and main page
 
         builder.Services
             .AddServices()

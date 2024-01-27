@@ -17,6 +17,9 @@ builder.Services
 
 builder.Services.AddControllers();
 
+builder.Services.AddLogging();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
+
 // Configure authorization
 builder.Services.AddAuthorization();
 builder.Services

@@ -50,10 +50,11 @@ public class ConnectionService
             else
                 _status = false;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             _status = false;
             _logger?.LogInformation("Endpoint {pingableEndpoint} is not accessible on {ip}", pingableEndpoint, _connectionData.BaseURL);
+            _logger?.LogError("PING FAIL {ex}", ex.InnerException?.Message);
         }
         finally
         {
