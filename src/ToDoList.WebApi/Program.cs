@@ -1,44 +1,19 @@
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
 using ToDoList.Application;
 using ToDoList.Infrastructure;
-using ToDoList.Infrastructure.Database;
+using ToDoList.Infrastructure.Data;
+using ToDoList.Infrastructure.Identity;
+using ToDoList.WebApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// TODO add logging
-
-// Add Application and Infrastructure
 builder.Services
     .AddApplication()
-    .AddInfrastructure();
-
-builder.Services.AddControllers();
+    .AddInfrastructure()
+    .AddWebServices();
 
 builder.Services.AddLogging();
 builder.Logging.SetMinimumLevel(LogLevel.Information);
-
-// Configure authorization
-builder.Services.AddAuthorization();
-builder.Services
-    .AddIdentityApiEndpoints<IdentityUser>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-// Swagger configuration
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
-    {
-        In = ParameterLocation.Header,
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
-    });
-
-    options.OperationFilter<SecurityRequirementsOperationFilter>();
-});
 
 var app = builder.Build();
 
@@ -60,10 +35,11 @@ app.UseExceptionHandler(c => c.Run(async context =>
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.MapControllers();
 
-app.MapIdentityApi<IdentityUser>();
+app.MapIdentityApi<ApplicationUser>();
+
+// Initialize the database
+await app.InitialiseDatabaseAsync();
 
 app.Run();
