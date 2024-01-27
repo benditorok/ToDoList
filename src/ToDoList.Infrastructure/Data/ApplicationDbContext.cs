@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using ToDoList.Domain.Entities;
+using ToDoList.Infrastructure.Identity;
 
 namespace ToDoList.Infrastructure.Database;
 
-public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
 {
     protected internal virtual DbSet<Note> Notes => Set<Note>();
 
@@ -14,8 +15,6 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
-        // TODO remove after creating migrations
-        Database.EnsureCreated();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
