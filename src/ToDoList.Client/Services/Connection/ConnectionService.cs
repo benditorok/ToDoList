@@ -35,6 +35,8 @@ public class ConnectionService
             .Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
         _pingTimer = new Timer(async x => await Ping(_connectionData.PingableEndpoint), null, _pingInterval, Timeout.Infinite);
+
+        _logger?.LogInformation("ConnectionService initialized with base address {addr}", _connectionData.BaseURL);
     }
 
     private async Task Ping(string pingableEndpoint)

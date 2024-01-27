@@ -21,10 +21,10 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>ToDoList.Client</ApplicationTitle>
+		<ApplicationTitle>ToDoList</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.todolist.client</ApplicationId>
+		<ApplicationId>com.benditorok.todolist.client</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
