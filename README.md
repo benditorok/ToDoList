@@ -2,7 +2,7 @@
 This project is a Todo List made in .NET MAUI with an ASP.NET backend which uses a PostgreSQL database or an in-memory database.
 
 # Setup
-You can run the application by setting up the **Client** and the **WebApi** project as the startup projects.
+You can run the application by setting up the **Client** and the **WebApi** *(with profile **8080 Dev**)* project as the startup projects.
 This will start the application using an **in-memroy database**.
 
 Seeded accounts(username, password):
