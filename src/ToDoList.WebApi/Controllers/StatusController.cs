@@ -18,8 +18,9 @@ public class StatusController : ControllerBase
     [HttpGet, HttpPost]
     public Task<IActionResult> Get()
     {
+        var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
         var ip = HttpContext.Connection.RemoteIpAddress;
-        _logger?.LogInformation("Status pinged from {id}", ip?.ToString());
+        _logger?.LogInformation("Ping from {id}, user {user}", ip?.ToString(), user?.Value);
 
         return Task.FromResult<IActionResult>(Ok());
     }
