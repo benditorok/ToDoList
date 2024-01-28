@@ -28,73 +28,47 @@ public class UserInteractionController : ControllerBase
     [HttpPost("addnotelist")]
     public async Task<IActionResult> AddNoteListAsync([FromBody] NoteList value)
     {
-        try
-        {
-            var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
 
-            if (user != null)
-            {
-                value.UserId = user.Value;
-                await _noteListLogic.CreateAsync(value);
-
-                return Ok(value.Id);
-            }
-            else
-            {
-                return Forbid();
-            }
-        }
-        catch (Exception ex)
+        if (user == null)
         {
-            return BadRequest(ex.Message);
+            return Forbid();
         }
+
+        value.UserId = user.Value;
+        await _noteListLogic.CreateAsync(value);
+
+        return Ok(value.Id);
     }
 
     [HttpGet("getallnotelists")]
     public async Task<IActionResult> GetAllNoteListAsync()
     {
-        try
+        var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        if (user == null)
         {
-            var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+            return Forbid();
+        }
 
-            if (user != null)
-            {
-                return Ok(await _noteListLogic.ReadAll()
-                    .Where(x => x.UserId == user.Value)
-                    .OrderByDescending(x => x.Id)
-                    .ToListAsync());
-            }
-            else
-            {
-                return Forbid();
-            }
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return Ok(await _noteListLogic.ReadAll()
+                .Where(x => x.UserId == user.Value)
+                .OrderByDescending(x => x.Id)
+                .ToListAsync());
     }
 
     [HttpGet("getnotelist")]
     public async Task<IActionResult> GetNoteListAsync(int id)
     {
-        try
-        {
-            var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-            var item = await _noteListLogic.ReadAsync(id);
+        var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        var item = await _noteListLogic.ReadAsync(id);
 
-            if (item?.UserId == user?.Value)
-            {
-                return Ok(item);
-            }
-            else
-            {
-                return Forbid();
-            }
-        }
-        catch (Exception ex)
+        if (item?.UserId == user?.Value)
         {
-            return BadRequest(ex.Message);
+            return Ok(item);
+        }
+        else
+        {
+            return Forbid();
         }
     }
 
@@ -105,179 +79,130 @@ public class UserInteractionController : ControllerBase
         // If the user deletes it this will create a new one and assign it to the user.
         const string title = "ToDoList";
 
-        try
+        var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+
+        if (user == null)
         {
-            var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-
-            if (user == null)
-            {
-                return Forbid();
-            }
-
-            var item = (user != null) ? await _noteListLogic.ReadAll()
-                .FirstOrDefaultAsync(x => x.UserId == user.Value && x.Title == title) : null;
-
-            if (item == null)
-            {
-                int todolistId = await _noteListLogic.CreateAsync(new() { Title = title, UserId = user?.Value });
-                item = await _noteListLogic.ReadAsync(todolistId);
-            }
-
-            return Ok(item);
+            return Forbid();
         }
-        catch (Exception ex)
+
+        var item = (user != null) ? await _noteListLogic.ReadAll()
+            .FirstOrDefaultAsync(x => x.UserId == user.Value && x.Title == title) : null;
+
+        if (item == null)
         {
-            return BadRequest(ex.Message);
+            int todolistId = await _noteListLogic.CreateAsync(new() { Title = title, UserId = user?.Value });
+            item = await _noteListLogic.ReadAsync(todolistId);
         }
+
+        return Ok(item);
     }
 
     [HttpPut("updatenotelist")]
     public async Task<IActionResult> UpdateNoteListAsync([FromBody] NoteList value)
     {
-        try
-        {
-            var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-            var old = await _noteListLogic.ReadAsync(value.Id);
+        var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        var old = await _noteListLogic.ReadAsync(value.Id);
 
-            if (old.UserId == user?.Value && old.UserId == value.UserId)
-            {
-                await _noteListLogic.UpdateAsync(value);
-                return Ok();
-            }
-            else
-            {
-                return Forbid();
-            }
-        }
-        catch (Exception ex)
+        if (old.UserId == user?.Value && old.UserId == value.UserId)
         {
-            return BadRequest(ex.Message);
+            await _noteListLogic.UpdateAsync(value);
+            return Ok();
+        }
+        else
+        {
+            return Forbid();
         }
     }
 
     [HttpDelete("removenotelist")]
     public async Task<IActionResult> DeleteNoteListAsync(int id)
     {
-        try
-        {
-            var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-            var item = await _noteListLogic.ReadAsync(id);
+        var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        var item = await _noteListLogic.ReadAsync(id);
 
-            if (user?.Value == item.UserId)
-            {
-                await _noteListLogic.DeleteAsync(id);
-                return Ok();
-            }
-            else
-            {
-                return Forbid();
-            }
-        }
-        catch (Exception ex)
+        if (user?.Value == item.UserId)
         {
-            return BadRequest(ex.Message);
+            await _noteListLogic.DeleteAsync(id);
+            return Ok();
+        }
+        else
+        {
+            return Forbid();
         }
     }
 
     [HttpPost("addnote")]
     public async Task<IActionResult> AddNoteAsync(int listId, [FromBody] Note value)
     {
-        try
-        {
-            var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-            var list = await _noteListLogic.ReadAsync(listId);
+        var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        var list = await _noteListLogic.ReadAsync(listId);
 
-            if (list.UserId == user?.Value)
-            {
-                value.NoteListId = listId;
-                await _noteLogic.CreateAsync(value);
-                return Ok(value.Id);
-            }
-            else
-            {
-                return Forbid();
-            }
-        }
-        catch (Exception ex)
+        if (list.UserId == user?.Value)
         {
-            return BadRequest(ex.Message);
+            value.NoteListId = listId;
+            await _noteLogic.CreateAsync(value);
+            return Ok(value.Id);
+        }
+        else
+        {
+            return Forbid();
         }
     }
 
     [HttpPut("updatenote")]
     public async Task<IActionResult> UpdateNoteAsync([FromBody] Note value)
     {
-        try
-        {
-            var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-            var list = await _noteListLogic.ReadAsync(value.NoteListId);
+        var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        var list = await _noteListLogic.ReadAsync(value.NoteListId);
 
-            if (list.UserId == user?.Value)
+        if (list.UserId == user?.Value)
+        {
+            if (list.Notes.Any(x => x.Id == value.Id))
             {
-                if (list.Notes.Any(x => x.Id == value.Id))
-                {
-                    await _noteLogic.UpdateAsync(value);
-                    return Ok();
-                }
-                else
-                {
-                    return NotFound();
-                }
+                await _noteLogic.UpdateAsync(value);
+                return Ok();
             }
             else
             {
-                return Forbid();
+                return NotFound();
             }
         }
-        catch (Exception ex)
+        else
         {
-            return BadRequest(ex.Message);
+            return Forbid();
         }
     }
 
     [HttpDelete("removenote")]
     public async Task<IActionResult> RemoveNoteAsync(int id)
     {
-        try
-        {
-            var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-            var note = await _noteLogic.ReadAsync(id);
+        var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        var note = await _noteLogic.ReadAsync(id);
 
-            if (note.NoteList?.UserId == user?.Value)
-            {
-                await _noteLogic.DeleteAsync(id);
-                return Ok();
-            }
-            else
-            {
-                return Forbid();
-            }
-        }
-        catch (Exception ex)
+        if (note.NoteList?.UserId == user?.Value)
         {
-            return BadRequest(ex.Message);
+            await _noteLogic.DeleteAsync(id);
+            return Ok();
+        }
+        else
+        {
+            return Forbid();
         }
     }
 
     [HttpGet("getuserinfo")]
     public Task<IActionResult> GetUserInfoAsync()
     {
-        try
-        {
-            var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
 
-            if (user != null)
-            {
-                return Task.FromResult<IActionResult>(Ok(user.Value));
-            }
-            else
-            {
-                return Task.FromResult<IActionResult>(Forbid());
-            }
-        }
-        catch (Exception ex)
+        if (user != null)
         {
-            return Task.FromResult<IActionResult>(BadRequest(ex.Message));
+            return Task.FromResult<IActionResult>(Ok(user.Value));
+        }
+        else
+        {
+            return Task.FromResult<IActionResult>(Forbid());
         }
     }
 }

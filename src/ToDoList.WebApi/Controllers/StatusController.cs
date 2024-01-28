@@ -14,12 +14,13 @@ public class StatusController : ControllerBase
         _logger = logger; 
     }
 
-    // TODO make this better
+    // TODO make this better, limit rate
     [HttpGet, HttpPost]
     public Task<IActionResult> Get()
     {
         var ip = HttpContext.Connection.RemoteIpAddress;
         _logger?.LogInformation("Status pinged from {id}", ip?.ToString());
+
         return Task.FromResult<IActionResult>(Ok());
     }
 }

@@ -5,6 +5,9 @@ using ToDoList.Domain.Entities;
 
 namespace ToDoList.WebApi.Controllers;
 
+/// <summary>
+/// CRUD controller for notes only accessible by 'Administrator' and 'Manager'.
+/// </summary>
 [Route("[controller]")]
 [ApiController]
 [Authorize(Roles = "Administrator, Manager")]
@@ -20,54 +23,28 @@ public class NoteController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] Note value)
     {
-        try
-        {
-            return Ok(await _logic.CreateAsync(value));
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        int id = await _logic.CreateAsync(value);
+        return Ok(id);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> ReadAsync(int id)
     {
-        try
-        {
-            return Ok(await _logic.ReadAsync(id));
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var item = await _logic.ReadAsync(id);
+        return Ok(item);
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdateAsync([FromBody] Note value)
     {
-        try
-        {
-            await _logic.UpdateAsync(value);
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        await _logic.UpdateAsync(value);
+        return Ok();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
-        try
-        {
-            await _logic.DeleteAsync(id);
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        await _logic.DeleteAsync(id);
+        return Ok();
     }
 }
