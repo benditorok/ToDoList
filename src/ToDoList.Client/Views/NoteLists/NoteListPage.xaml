@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ToDoList.Client.Views.NoteLists.NoteListPage"
+             
+             xmlns:NoteListView="clr-namespace:ToDoList.Client.Views.NoteLists"
+             xmlns:Entity="clr-namespace:ToDoList.Domain.Entities;assembly=ToDoList.Domain"
+             xmlns:Common="clr-namespace:ToDoList.Client.Common"
+             x:DataType="NoteListView:NoteListViewModel"
+             NavigationPage.HasBackButton="False"
+             
+             Title="NoteListPage">
+
+    <ContentPage.Resources>
+        <Common:ColorConverter x:Key="ColorConverter" />
+    </ContentPage.Resources>
+    
+    <Grid Padding="30"
+          RowDefinitions="auto, *"
+          ColumnDefinitions="2*, *, *">
+        <Entry Grid.Row="0"
+               Grid.Column="0"
+               Placeholder="Add a new Title"
+               FontSize="24"
+               Margin="5"
+               Text="{Binding NewNoteList.Title}"/>
+
+        <Picker Grid.Row="0"
+                Grid.Column="1"
+                Title="Select a color"
+                Margin="5"
+                ItemsSource="{Binding AvailableColors}"
+                SelectedItem="{Binding SelectedColor}"
+                SelectedIndex="{Binding AvailableColors}" />
+
+        <Button Grid.Row="0"
+                Grid.Column="2"
+                Text="Add"
+                Margin="5"
+                MinimumWidthRequest="80"
+                MaximumWidthRequest="200"
+                HorizontalOptions="Start"
+                FontSize="16"
+                Command="{Binding AddNoteListCommand}" />
+
+        <CollectionView Grid.Row="1"
+                        Grid.ColumnSpan="3"
+                        VerticalScrollBarVisibility="Always"
+                        ItemsUpdatingScrollMode="KeepItemsInView"
+                        ItemsSource="{Binding UserNoteLists}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="3" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="Entity:NoteList">
+                    <Grid>
+                        <Frame MinimumHeightRequest="75"
+                               MaximumHeightRequest="120"
+                               MinimumWidthRequest="80"
+                               CornerRadius="10"
+                               Margin="5"
+                               BackgroundColor="{Binding ColorRGBA, Converter={StaticResource ColorConverter}}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=GotoNoteSelectionCommand}"
+                                                      CommandParameter="{Binding .}" />
+
+                                <PointerGestureRecognizer PointerReleasedCommand="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=GotoNoteSelectionCommand}"
+                                                          PointerReleasedCommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+                            
+                            <Label Text="{Binding Title}"
+                                   FontSize="24"
+                                   HorizontalTextAlignment="Center"
+                                   VerticalTextAlignment="Center" />
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>

@@ -3,17 +3,68 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{C2284069-423C-4EC9-BA1A-D3E120524B4F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D5179F81-8E2D-4084-B74B-9B6AD8632B10}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{22FFCAA6-C306-41FF-AEFD-8702A6FBE338}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F0B900FA-8173-4B04-89EF-174C2E91CF5C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{EA7619CF-FE6F-4FE6-AB01-7C4DB83B5639}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "other", "other", "{121A9EDB-B9CD-422C-B029-03279AB5B97D}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other", "Other", "{8680E208-0C34-4D96-9650-D27E93EAED1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.Application", "src\ToDoList.Application\ToDoList.Application.csproj", "{54B5A88B-5DFA-4B13-804B-58A9C58A13AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.Domain", "src\ToDoList.Domain\ToDoList.Domain.csproj", "{6277718B-D861-47A4-A78E-4BFF42801959}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.Infrastructure", "src\ToDoList.Infrastructure\ToDoList.Infrastructure.csproj", "{BA585F4B-A6C5-4E01-8513-6DD2E16CDC5D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.WebApi", "src\ToDoList.WebApi\ToDoList.WebApi.csproj", "{202C3F23-EFAF-4648-8DCB-BB367AB50991}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoList.Client", "src\ToDoList.Client\ToDoList.Client.csproj", "{FEB3714B-EF54-421E-AB29-EC3EB1E1A5EB}"
 EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{54B5A88B-5DFA-4B13-804B-58A9C58A13AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54B5A88B-5DFA-4B13-804B-58A9C58A13AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54B5A88B-5DFA-4B13-804B-58A9C58A13AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54B5A88B-5DFA-4B13-804B-58A9C58A13AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6277718B-D861-47A4-A78E-4BFF42801959}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6277718B-D861-47A4-A78E-4BFF42801959}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6277718B-D861-47A4-A78E-4BFF42801959}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6277718B-D861-47A4-A78E-4BFF42801959}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA585F4B-A6C5-4E01-8513-6DD2E16CDC5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA585F4B-A6C5-4E01-8513-6DD2E16CDC5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA585F4B-A6C5-4E01-8513-6DD2E16CDC5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA585F4B-A6C5-4E01-8513-6DD2E16CDC5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{202C3F23-EFAF-4648-8DCB-BB367AB50991}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{202C3F23-EFAF-4648-8DCB-BB367AB50991}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{202C3F23-EFAF-4648-8DCB-BB367AB50991}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{202C3F23-EFAF-4648-8DCB-BB367AB50991}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEB3714B-EF54-421E-AB29-EC3EB1E1A5EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEB3714B-EF54-421E-AB29-EC3EB1E1A5EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEB3714B-EF54-421E-AB29-EC3EB1E1A5EB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{FEB3714B-EF54-421E-AB29-EC3EB1E1A5EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEB3714B-EF54-421E-AB29-EC3EB1E1A5EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEB3714B-EF54-421E-AB29-EC3EB1E1A5EB}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{54B5A88B-5DFA-4B13-804B-58A9C58A13AA} = {D5179F81-8E2D-4084-B74B-9B6AD8632B10}
+		{6277718B-D861-47A4-A78E-4BFF42801959} = {D5179F81-8E2D-4084-B74B-9B6AD8632B10}
+		{BA585F4B-A6C5-4E01-8513-6DD2E16CDC5D} = {D5179F81-8E2D-4084-B74B-9B6AD8632B10}
+		{202C3F23-EFAF-4648-8DCB-BB367AB50991} = {D5179F81-8E2D-4084-B74B-9B6AD8632B10}
+		{FEB3714B-EF54-421E-AB29-EC3EB1E1A5EB} = {D5179F81-8E2D-4084-B74B-9B6AD8632B10}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DE3D95FC-A839-45AD-8A0F-A805A3493EC0}
