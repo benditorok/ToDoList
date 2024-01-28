@@ -3,6 +3,7 @@ This project is a Todo List made in .NET MAUI with an ASP.NET backend which uses
 
 # Setup
 You can run the application by setting up the **Client** and the **WebApi** project as the startup projects.
+*Note: the **WebApi** project has to run on the profile **8080 Dev***
 This will start the application using an **in-memroy database**.
 
 Seeded accounts(username, password):
