@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using ToDoList.Client.Common;
 using ToDoList.Client.Services.Connection;
 using ToDoList.Client.Views.Identity;
 using ToDoList.Client.Views.NoteLists;
@@ -35,7 +36,6 @@ public partial class MainViewModel : ObservableObject
         else
         {
             await Shell.Current.GoToAsync("//AccountPage");
-            //await Shell.Current.GoToAsync($"//{nameof(AccountPage)}");
         }
     }
 
@@ -44,37 +44,6 @@ public partial class MainViewModel : ObservableObject
         try
         {
             UserToDoList = await _connectionService.GetAsync<NoteList>("user/gettodolist");
-
-            //const string title = "ToDoList";
-
-            //NoteList? todoList;
-
-            //await _sm.WaitAsync();
-
-            //try
-            //{
-            //    todoList = await _connectionService.GetAsync<NoteList>("user/synctodolist");
-
-            //    if (todoList != null)
-            //    {
-            //        UserToDoList = todoList;
-            //    }
-            //    else
-            //    {
-            //        NoteList newTodoList = new() { Title = title };
-            //        await _connectionService.PostAsync<NoteList>("user/addnotelist", newTodoList);
-            //    }
-            //}
-            //finally
-            //{
-            //    _sm.Release();
-            //}
-
-            //if (todoList == null)
-            //{
-            //    await LoadToDoListAsync();
-            //}
-
         }
         catch (Exception ex)
         {
@@ -96,7 +65,13 @@ public partial class MainViewModel : ObservableObject
         try
         {
             var list = await _connectionService.GetAsync<NoteList>($"user/getnotelist?id={UserToDoList?.Id}");
-            UserToDoList = list ?? UserToDoList;
+
+            if (list != null)
+            {
+                // TODO sort server side
+                list.Notes.OrderByDescending(x => x.Id).ThenByDescending(x => !x.IsDone);
+                UserToDoList = list;
+            }
         }
         catch (Exception ex)
         {
@@ -118,6 +93,46 @@ public partial class MainViewModel : ObservableObject
         finally
         {
             UserToDoItem = new();
+            await RefreshToDoListAsync();
+        }
+    }
+
+    [RelayCommand] 
+    private async Task SwitchNoteCompletionStateAsync(Note note)
+    {
+        try
+        {
+            bool done = note.IsDone;
+            note.IsDone = !done;
+
+            await _connectionService.PutAsync<Note>($"user/updatenote", note);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogInformation("[VM-MAIN] {ex}", ex.Message);
+        }
+        finally
+        {
+            await RefreshToDoListAsync();
+        }
+    }
+
+    [RelayCommand]
+    private async Task QuickRemoveNoteAsync(Note note)
+    {
+        try
+        {
+            if(await Shell.Current.DisplayAlert("Alert", $"Are you sure you want to delete this note?", "Yes", "Cancel"))
+            {
+                await _connectionService.DeleteAsync($"user/removenote?id={note?.Id}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogInformation("[VM-MAIN] {ex}", ex.Message);
+        }
+        finally
+        {
             await RefreshToDoListAsync();
         }
     }

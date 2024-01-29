@@ -1,50 +1,110 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ToDoList.Client.Views.Main.MainPage"
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ToDoList.Client.Views.Main.MainPage"
              
-             xmlns:MainView="clr-namespace:ToDoList.Client.Views.Main"
-             xmlns:Entity="clr-namespace:ToDoList.Domain.Entities;assembly=ToDoList.Domain"
-             x:DataType="MainView:MainViewModel"
-             NavigationPage.HasBackButton="False"
+    
+    xmlns:MainView="clr-namespace:ToDoList.Client.Views.Main"
+    xmlns:Entity="clr-namespace:ToDoList.Domain.Entities;assembly=ToDoList.Domain"
+    xmlns:Common="clr-namespace:ToDoList.Client.Common"
+    x:DataType="MainView:MainViewModel"
+    NavigationPage.HasBackButton="False"
              
-             Title="Home">
-    <Grid RowDefinitions="auto, *"
-          ColumnDefinitions="3*, *, 2*">
-        <Entry Grid.Row="0"
-               Grid.Column="0"
-               Placeholder="Todo"
-               FontSize="24"
-               Margin="5"
-               Text="{Binding UserToDoItem.Title}" />
+    Title="Home">
+    
+    <ContentPage.Resources>
+        <Common:CompletionStateToColorConverter x:Key="CompletionStateToColorConverter" />
+    </ContentPage.Resources>
 
-        <Button Grid.Row="0"
-                Grid.Column="1"
-                Text="Quick add"
-                Margin="5"
-                BackgroundColor="LightGreen" 
-                Command="{Binding QuickAddNoteCommand}" />
+    <Grid 
+        Margin="15" 
+        RowDefinitions="auto, *"
+        ColumnDefinitions="3*, 2*, 3*">
+        <Entry 
+            Grid.Row="0"
+            Grid.Column="0"
+            Placeholder="Todo"
+            FontSize="24"
+            Margin="5"
+            Text="{Binding UserToDoItem.Title}" />
 
-        <Button Grid.Row="0"
-                Grid.Column="2"
-                Text="Open user notelists"
-                Margin="5"
-                BackgroundColor="CornflowerBlue" 
-                Command="{Binding GotoNoteListPageCommand}" />
+        <Button 
+            Grid.Row="0"
+            Grid.Column="1"
+            Text="Add"
+            Margin="5"
+            BackgroundColor="LightGreen"
+            LineBreakMode="WordWrap"
+            Command="{Binding QuickAddNoteCommand}" />
 
-        <CollectionView Grid.Row="1"
-                        Grid.ColumnSpan="3"
-                        VerticalScrollBarVisibility="Always"
-                        ItemsUpdatingScrollMode="KeepItemsInView"
-                        ItemsSource="{Binding UserToDoList.Notes}">
-        <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="Entity:Note">
-                <Grid>
-                        <Label Text="{Binding Title}"
-                               FontSize="24" />
-                    </Grid>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
+        <Button 
+            Grid.Row="0"
+            Grid.Column="2"
+            Text="Open user notelists"
+            Margin="5"
+            BackgroundColor="CornflowerBlue" 
+            LineBreakMode="WordWrap"
+            Command="{Binding GotoNoteListPageCommand}" />
+
+        <CollectionView 
+            Grid.Row="1"
+            Grid.ColumnSpan="3"
+            VerticalScrollBarVisibility="Always"
+            ItemsUpdatingScrollMode="KeepItemsInView"
+            ItemsSource="{Binding UserToDoList.Notes}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="Entity:Note">
+                    <SwipeView>
+                        <!-- Note touchscreen only -->
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem 
+                                    Text="Done"
+                                    BackgroundColor="LightGreen"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type MainView:MainViewModel}}, Path=SwitchNoteCompletionStateCommand}"
+                                    CommandParameter="{Binding .}"/>
+                                <SwipeItem 
+                                   Text="Remove"
+                                   BackgroundColor="Red"
+                                   Command="{Binding Source={RelativeSource AncestorType={x:Type MainView:MainViewModel}}, Path=QuickRemoveNoteCommand}"
+                                   CommandParameter="{Binding .}" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Grid>
+                            <Frame 
+                                Margin="0, 5"
+                                CornerRadius="10"
+                                BorderColor="DarkSlateGrey"
+                                Padding="5">
+                                <!-- Note right click only -->
+                                <FlyoutBase.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem 
+                                            Text="Done"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type MainView:MainViewModel}}, Path=SwitchNoteCompletionStateCommand}"
+                                            CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type Entity:Note}}}" />
+                                        <MenuFlyoutItem 
+                                            Text="Remove"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type MainView:MainViewModel}}, Path=QuickRemoveNoteCommand}"
+                                            CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type Entity:Note}}}" />
+                                    </MenuFlyout>
+                                </FlyoutBase.ContextFlyout>
+                                <StackLayout>
+                                    <BoxView 
+                                        HeightRequest="5"
+                                        CornerRadius="2"
+                                        BackgroundColor="{Binding IsDone, Converter={StaticResource CompletionStateToColorConverter}}"
+                                        HorizontalOptions="Fill"/>
+                                    <Label 
+                                        Text="{Binding Title}"
+                                        FontSize="24" />
+                                </StackLayout>
+                            </Frame>
+                        </Grid>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
         </CollectionView>
     </Grid>
 </ContentPage>
