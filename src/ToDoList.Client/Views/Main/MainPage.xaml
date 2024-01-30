@@ -65,10 +65,10 @@
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type MainView:MainViewModel}}, Path=SwitchNoteCompletionStateCommand}"
                                     CommandParameter="{Binding .}"/>
                                 <SwipeItem 
-                                   Text="Remove"
-                                   BackgroundColor="Red"
-                                   Command="{Binding Source={RelativeSource AncestorType={x:Type MainView:MainViewModel}}, Path=QuickRemoveNoteCommand}"
-                                   CommandParameter="{Binding .}" />
+                                    Text="Remove"
+                                    BackgroundColor="Red"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type MainView:MainViewModel}}, Path=QuickRemoveNoteCommand}"
+                                    CommandParameter="{Binding .}" />
                             </SwipeItems>
                         </SwipeView.RightItems>
                         <Grid>
