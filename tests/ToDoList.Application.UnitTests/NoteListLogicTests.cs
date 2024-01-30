@@ -14,14 +14,14 @@ public class NoteListLogicTests : MockContext
 
     private static char[][] _validTitle =
     {
-        new char[NoteListConstants.TilteMaxLength],
-        new char[NoteListConstants.TilteMinLength]
+        new char[NoteListConstants.TitleMaxLength],
+        new char[NoteListConstants.TitleMinLength]
     };
 
     private static char[][] _invalidTitle =
     {
-        new char[NoteListConstants.TilteMaxLength + 1],
-        new char[NoteListConstants.TilteMinLength >= 1 ? NoteConstants.TilteMinLength - 1 : 0]
+        new char[NoteListConstants.TitleMaxLength + 1],
+        new char[NoteListConstants.TitleMinLength >= 1 ? NoteConstants.TilteMinLength - 1 : 0]
     };
 
     private static string[] _validColorRGBA =

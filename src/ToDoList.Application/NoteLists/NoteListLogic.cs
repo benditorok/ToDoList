@@ -17,8 +17,8 @@ public class NoteListLogic : ILogic<NoteList>
     // TODO Data sanitization, logic
     public async Task<int> CreateAsync(NoteList item)
     {
-        if (item.Title?.Length < NoteListConstants.TilteMinLength || 
-            item.Title?.Length > NoteListConstants.TilteMaxLength)
+        if (item.Title?.Length < NoteListConstants.TitleMinLength || 
+            item.Title?.Length > NoteListConstants.TitleMaxLength)
             throw new InvalidNoteListException($"Title of notelist Id:{item.Id} is invalid.");
 
         if (item.ColorRGBA.Length != NoteListConstants.ColorRGBALength || 
