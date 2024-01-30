@@ -19,7 +19,7 @@
 
     <Grid 
         Margin="15" 
-        RowDefinitions="auto, *"
+        RowDefinitions="auto, *, auto"
         ColumnDefinitions="3*, 2*, 3*">
         <Entry 
             Grid.Row="0"
@@ -106,5 +106,9 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+        <Label
+            Grid.Row="2"
+            Grid.ColumnSpan="3"
+            Text="Note: swipe or right click for options" />
     </Grid>
 </ContentPage>

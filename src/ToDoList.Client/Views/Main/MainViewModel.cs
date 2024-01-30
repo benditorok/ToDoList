@@ -13,7 +13,6 @@ public partial class MainViewModel : ObservableObject
 {
     private AuthorizedConnectionService _connectionService;
     private ILogger<MainViewModel>? _logger;
-    private static SemaphoreSlim _sm = new SemaphoreSlim(1, 1);
 
     [ObservableProperty]
     private NoteList? _userToDoList;
@@ -31,7 +30,7 @@ public partial class MainViewModel : ObservableObject
     {
         if (_connectionService.IsLoggedIn)
         {
-            await LoadToDoListAsync();
+            await RefreshToDoListAsync();
         }
         else
         {
@@ -39,43 +38,17 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    private async Task LoadToDoListAsync()
-    {
-        try
-        {
-            UserToDoList = await _connectionService.GetAsync<NoteList>("user/gettodolist");
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogInformation("[VM-MAIN] {ex}", ex.Message);
-
-            if (await Shell.Current.DisplayAlert("Alert", "Loading the ToDoList failed!", "Retry", "Exit"))
-            {
-                await LoadToDoListAsync();
-            }
-            else
-            {
-                Application.Current?.Quit();
-            }
-        }
-    }
-
     private async Task RefreshToDoListAsync()
     {
         try
         {
-            var list = await _connectionService.GetAsync<NoteList>($"user/getnotelist?id={UserToDoList?.Id}");
-
-            if (list != null)
-            {
-                // TODO sort server side
-                list.Notes.OrderByDescending(x => x.Id).ThenByDescending(x => !x.IsDone);
-                UserToDoList = list;
-            }
+            // TODO should reload the page, order is not getting updated properly
+            UserToDoList = await _connectionService.GetAsync<NoteList>("user/gettodolist");
+            UserToDoList?.Notes.OrderBy(x => x.IsDone).ThenByDescending(x => x.Id);
         }
         catch (Exception ex)
         {
-            _logger?.LogInformation("[VM-MAIN] {ex}", ex.Message);
+            _logger?.LogError(ex, ex.Message);
         }
     }
 
