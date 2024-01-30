@@ -26,7 +26,14 @@ internal class ApplicationDbContextInitializer
     {
         try
         {
-            await _context.Database.MigrateAsync();
+            if (_context.Database.IsRelational())
+            {
+                await _context.Database.MigrateAsync();
+            }
+            else
+            {
+                await _context.Database.EnsureCreatedAsync();
+            }
         }
         catch (Exception ex)
         {
