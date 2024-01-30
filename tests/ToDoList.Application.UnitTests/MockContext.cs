@@ -1,6 +1,5 @@
 ﻿using MockQueryable.Moq;
 using Moq;
-using NUnit.Framework;
 using ToDoList.Application.Common.Interfaces;
 using ToDoList.Application.NoteLists;
 using ToDoList.Application.Notes;
@@ -15,6 +14,7 @@ public class MockContext
 
     private static Mock<IRepository<Note>> _noteRepository = null!;
     private static Mock<IRepository<NoteList>> _noteListRepository = null!;
+
     private static List<Note> _notes = new()
     {
         new Note()
@@ -34,7 +34,7 @@ public class MockContext
             Id = 3,
             Title = "Third",
             NoteListId = 2,
-        },
+        }
     };
 
     private static List<NoteList> _noteLists = new()
@@ -45,7 +45,6 @@ public class MockContext
             Id = 1,
             Title = "First list",
         },
-
         // Has 2 notes
         new NoteList()
         {
@@ -57,7 +56,7 @@ public class MockContext
         {
             Id = 1,
             Title = "Third list",
-        },
+        }
     };
 
     public virtual void Setup()

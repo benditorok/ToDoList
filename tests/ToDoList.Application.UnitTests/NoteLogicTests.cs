@@ -12,7 +12,7 @@ public class NoteLogicTests : MockContext
     public override void Setup() => base.Setup();
 
     private static char[][] _validTitle =
-{
+    {
         new char[NoteConstants.TilteMaxLength],
         new char[NoteConstants.TilteMinLength]
     };
