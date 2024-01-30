@@ -16,10 +16,10 @@ namespace ToDoList.WebApi.Controllers;
 [Authorize]
 public class UserInteractionController : ControllerBase
 {
-    private NoteListLogic _noteListLogic;
-    private NoteLogic _noteLogic;
+    private ILogic<NoteList> _noteListLogic;
+    private ILogic<Note> _noteLogic;
 
-    public UserInteractionController(NoteListLogic noteListLogic, NoteLogic noteLogic)
+    public UserInteractionController(ILogic<NoteList> noteListLogic, ILogic<Note> noteLogic)
     {
         _noteListLogic = noteListLogic;
         _noteLogic = noteLogic;
