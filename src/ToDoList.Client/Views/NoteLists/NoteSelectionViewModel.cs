@@ -57,6 +57,26 @@ public partial class NoteSelectionViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task RemoveNoteAsync(Note note)
+    {
+        try
+        {
+            if (await Shell.Current.DisplayAlert("Alert", $"Are you sure you want to delete this note? {note.Title}", "Yes", "Cancel"))
+            {
+                await _connectionService.DeleteAsync($"user/removenote?id={note.Id}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, ex.Message);
+        }
+        finally
+        {
+            await RefreshUserNotesAsync();
+        }
+    }
+
+    [RelayCommand]
     private async Task GoBackAsync()
     {
         await Shell.Current.GoToAsync("..");

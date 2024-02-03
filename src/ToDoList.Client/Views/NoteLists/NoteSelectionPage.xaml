@@ -5,45 +5,87 @@
              
              xmlns:NoteListView="clr-namespace:ToDoList.Client.Views.NoteLists"
              xmlns:Entity="clr-namespace:ToDoList.Domain.Entities;assembly=ToDoList.Domain"
+             xmlns:Common="clr-namespace:ToDoList.Client.Common"
              x:DataType="NoteListView:NoteSelectionViewModel"
              
              Title="NoteSelectionPage">
-    
-    <VerticalStackLayout  Margin="15"
-                          Padding="30, 60, 30, 30">
-        <Label Text="{Binding NoteList.Title}" />
-        
-        <Label Text="Add new Note"
-               FontSize="24" />
-        <Entry Text="{Binding NewNote.Title}"
-               Placeholder="Title"/>
 
-        <Button Text="Add"
-        Margin="0, 10"
-        BackgroundColor="LightGreen" 
-        Command="{Binding AddNoteCommand}" />
+    <ContentPage.Resources>
+        <Common:CompletionStateToColorConverter x:Key="CompletionStateToColorConverter" />
+    </ContentPage.Resources>
 
-        <CollectionView x:Name="listView"
-                VerticalScrollBarVisibility="Always"
-                ItemsUpdatingScrollMode="KeepItemsInView"
-                ItemsSource="{Binding NoteList.Notes}">
+    <Grid
+        Margin="15"
+        RowDefinitions="auto, auto, *"
+        ColumnDefinitions="2*, *">
+        <Label
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            Margin="5"
+            Text="{Binding NoteList.Title}"
+            FontSize="32"
+            HorizontalOptions="Center"/>
+
+        <Entry 
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="5"
+            FontSize="24"
+            Text="{Binding NewNote.Title}"
+            Placeholder="Add new Note"/>
+        <Button
+            Grid.Row="1"
+            Grid.Column="1"
+            Text="Add"
+            Margin="5"
+            BackgroundColor="LightGreen" 
+            Command="{Binding AddNoteCommand}" />
+
+        <CollectionView 
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            x:Name="listView"
+            VerticalScrollBarVisibility="Always"
+            ItemsUpdatingScrollMode="KeepItemsInView"
+            ItemsSource="{Binding NoteList.Notes}">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="Entity:Note">
                     <Grid>
-                        <Label Text="{Binding Title}"
-                               FontSize="24">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteSelectionViewModel}}, Path=GotoNoteEditorCommand}"
-                                                      CommandParameter="{Binding .}" />
-
-                                <PointerGestureRecognizer PointerReleasedCommand="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteSelectionViewModel}}, Path=GotoNoteEditorCommand}"
-                                                          PointerReleasedCommandParameter="{Binding .}"/>
-                            </Label.GestureRecognizers>
-                        </Label>
+                        <Frame 
+                            Margin="0, 5"
+                            CornerRadius="10"
+                            BorderColor="DarkSlateGrey"
+                            Padding="5">
+                            <Frame.GestureRecognizers>
+                                <!-- Note go to note editor -->
+                                <TapGestureRecognizer 
+                                    Buttons="Primary"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteSelectionViewModel}}, Path=GotoNoteEditorCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Frame.GestureRecognizers>
+                            <!-- Note context menu -->
+                            <FlyoutBase.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem 
+                                        Text="Remove"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteSelectionViewModel}}, Path=RemoveNoteCommand}"
+                                        CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type Entity:Note}}}" />
+                                </MenuFlyout>
+                            </FlyoutBase.ContextFlyout>
+                            <StackLayout>
+                                <BoxView 
+                                    HeightRequest="5"
+                                    CornerRadius="2"
+                                    BackgroundColor="{Binding IsDone, Converter={StaticResource CompletionStateToColorConverter}}"
+                                    HorizontalOptions="Fill"/>
+                                <Label 
+                                    Text="{Binding Title}"
+                                    FontSize="24" />
+                            </StackLayout>
+                        </Frame>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-        
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>
