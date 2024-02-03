@@ -41,7 +41,7 @@ public partial class LoginViewModel : ObservableObject
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Alert", "Login failed!!", "OK");
-            _logger?.LogInformation("[VM-LOGIN-EX] {ex}", ex.Message);
+            _logger?.LogError(ex, ex.Message);
             Message = ex.Message;
         }
         finally

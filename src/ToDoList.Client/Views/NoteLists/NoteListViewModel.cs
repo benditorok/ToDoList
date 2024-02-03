@@ -45,7 +45,7 @@ public partial class NoteListViewModel : ObservableObject
     private async Task RefreshUserNoteListsAsync()
     {
         UserNoteLists = await _connectionService.GetAsync<List<NoteList>>("user/getallnotelists");
-        _logger?.LogInformation("[VM-NOTELIST] RefreshUserNoteLists");
+        _logger?.LogInformation("Refreshed user notelists.");
     }
 
     [RelayCommand]
@@ -61,7 +61,7 @@ public partial class NoteListViewModel : ObservableObject
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Alert", "Creation failed!", "OK");
-            _logger?.LogInformation("[VM-NOTELIST-EX] {ex}", ex.Message);
+            _logger?.LogError(ex, ex.Message);
         }
         finally
         {

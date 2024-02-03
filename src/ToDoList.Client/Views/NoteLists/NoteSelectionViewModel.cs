@@ -33,7 +33,7 @@ public partial class NoteSelectionViewModel : ObservableObject
     private async Task RefreshUserNotesAsync()
     {
         NoteList = await _connectionService.GetAsync<NoteList>($"user/getnotelist?id={NoteList?.Id}");
-        _logger?.LogInformation("[VM-NOTESELECTION] RefreshUserNoteLists");
+        _logger?.LogInformation("Refreshed user notes.");
     }
 
     [RelayCommand]
@@ -47,7 +47,7 @@ public partial class NoteSelectionViewModel : ObservableObject
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Alert", "Creation failed!", "OK");
-            _logger?.LogInformation("[VM-NOTESELECTION-EX] {ex}", ex.Message);
+            _logger?.LogError(ex, ex.Message);
         }
         finally
         {

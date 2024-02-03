@@ -34,7 +34,7 @@ public partial class NoteEditorViewModel : ObservableObject
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Alert", "Saving failed!", "OK");
-            _logger?.LogInformation("[VM-NOTEEDITOR-EX] {ex}", ex.Message);
+            _logger?.LogError(ex, ex.Message);
         }
     }
 

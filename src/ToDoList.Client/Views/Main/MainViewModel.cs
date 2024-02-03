@@ -61,7 +61,7 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            _logger?.LogInformation("[VM-MAIN] {ex}", ex.Message);
+            _logger?.LogError(ex, ex.Message);
         }
         finally
         {
@@ -82,7 +82,7 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            _logger?.LogInformation("[VM-MAIN] {ex}", ex.Message);
+            _logger?.LogError(ex, ex.Message);
         }
         finally
         {
@@ -95,14 +95,14 @@ public partial class MainViewModel : ObservableObject
     {
         try
         {
-            if(await Shell.Current.DisplayAlert("Alert", $"Are you sure you want to delete this note?", "Yes", "Cancel"))
+            if(await Shell.Current.DisplayAlert("Alert", $"Are you sure you want to delete this note? {note.Title}", "Yes", "Cancel"))
             {
-                await _connectionService.DeleteAsync($"user/removenote?id={note?.Id}");
+                await _connectionService.DeleteAsync($"user/removenote?id={note.Id}");
             }
         }
         catch (Exception ex)
         {
-            _logger?.LogInformation("[VM-MAIN] {ex}", ex.Message);
+            _logger?.LogError(ex, ex.Message);
         }
         finally
         {

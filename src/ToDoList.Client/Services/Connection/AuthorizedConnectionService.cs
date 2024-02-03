@@ -35,7 +35,7 @@ public class AuthorizedConnectionService : ConnectionService
         UserName = userName != null ? userName : throw new ArgumentNullException(nameof(userName));
         IsLoggedIn = true;
 
-        _logger?.LogInformation("[AUTH] Updated bearer token");
+        _logger?.LogInformation("Account bearer token updated.");
     }
 
     /// <summary>
@@ -74,9 +74,9 @@ public class AuthorizedConnectionService : ConnectionService
                 await UpdateHeaderToken();
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            _logger?.LogInformation("[AUTH-EX] Refreshing bearer token failed");
+            _logger?.LogError(ex, ex.Message);
         }
         finally
         {
@@ -127,14 +127,12 @@ public class AuthorizedConnectionService : ConnectionService
 
             // Create a timer to refresh the access token
             _refreshTimer = new Timer(async x => await RefreshTokenAsync(), null, _userTokenInfo.ExpiresIn, Timeout.Infinite);
-
-            _logger?.LogInformation("[AUTH] Login successful");
+            _logger?.LogInformation("Account login successful.");
         }
         else
         {
             var error = await response.Content.ReadAsStringAsync();
-            _logger?.LogInformation("[AUTH-EX] (Login failed) {msg}", error);
-            throw new InvalidOperationException(error);
+            throw new ConnectionServiceException(error);
         }
     }
     public async Task RegisterAsync(string username, string password)
@@ -154,13 +152,12 @@ public class AuthorizedConnectionService : ConnectionService
 
         if (response.IsSuccessStatusCode)
         {
-            _logger?.LogInformation("[AUTH] Account registered");
+            _logger?.LogInformation("Account registration successful.");
         }
         else
         {
             var error = await response.Content.ReadAsStringAsync();
-            _logger?.LogInformation("[AUTH-EX] (Registration failed) {msg}", error);
-            throw new InvalidOperationException(error);
+            throw new ConnectionServiceException(error);
         }
     }
 
@@ -171,6 +168,6 @@ public class AuthorizedConnectionService : ConnectionService
         _userTokenInfo = new();
         _client.DefaultRequestHeaders.Authorization = null;
 
-        _logger?.LogInformation("[AUTH] Logged out");
+        _logger?.LogInformation("Account logged out.");
     }
 }
