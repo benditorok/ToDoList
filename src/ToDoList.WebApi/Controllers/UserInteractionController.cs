@@ -194,8 +194,7 @@ public class UserInteractionController : ControllerBase
     [HttpGet("getuserinfo")]
     public Task<IActionResult> GetUserInfoAsync()
     {
-        var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-
+        var user = HttpContext.User.FindFirst(ClaimTypes.Email);
         if (user != null)
         {
             return Task.FromResult<IActionResult>(Ok(user.Value));
