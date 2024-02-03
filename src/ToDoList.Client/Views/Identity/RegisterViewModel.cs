@@ -41,7 +41,7 @@ public partial class RegisterViewModel : ObservableObject
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Alert", "Registration failed!", "OK");
-            _logger?.LogInformation("[VM-REGISTER-EX] {ex}", ex.Message);
+            _logger?.LogError(ex, ex.Message);
             Message = ex.Message;
         }
         finally

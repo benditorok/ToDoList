@@ -1,51 +1,57 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ToDoList.Client.Views.Identity.LoginPage"
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ToDoList.Client.Views.Identity.LoginPage"
              
-             xmlns:IdentityView="clr-namespace:ToDoList.Client.Views.Identity"
-             x:DataType="IdentityView:LoginViewModel"
-             
-             Title="Login Page">
+    xmlns:IdentityView="clr-namespace:ToDoList.Client.Views.Identity"
+    x:DataType="IdentityView:LoginViewModel"
     
-    <VerticalStackLayout Margin="15" Padding="30, 60, 30, 30">
-        <Label Text="Please log in"
-               FontSize="34"
-               TextColor="AntiqueWhite"/>
+    Title="Login Page">
+    
+    <VerticalStackLayout 
+        Margin="15" 
+        Padding="30, 60, 30, 30">
+        <Label 
+            Text="Please log in"
+            FontSize="32" />
         
-        <Label Text="Username"
-               Margin="0, 5"
-               TextColor="White" />
-        <Entry Placeholder="email@example.com"
-               Margin="0, 0, 0, 10"
-               Text="{Binding Username}" />
+        <Label 
+            Text="Username"
+            Margin="0, 5"/>
+        <Entry 
+            Placeholder="email@example.com"
+            Margin="0, 0, 0, 10"
+            Text="{Binding Username}" />
         
-        <Label Text="Password"
-               Margin="0, 5"
-               TextColor="White" />
-        <Entry Placeholder="********"
-               IsPassword="True"
-               Margin="0, 0, 0, 10"
-               Text="{Binding Password}"/>
+        <Label 
+            Text="Password"
+            Margin="0, 5" />
+        <Entry 
+            Placeholder="********"
+            IsPassword="True"
+            Margin="0, 0, 0, 10"
+            Text="{Binding Password}"/>
         
-        <Button Text="Log in"
-                Margin="0, 5"
-                BackgroundColor="Salmon" 
-                Command="{Binding LoginCommand}" />
-
-        <Button Text="No account? Register here!"
-                Margin="0, 5"
-                BackgroundColor="LightSlateGrey" 
-                Command="{Binding GotoRegisterPageCommand}" />
+        <Button 
+            Text="Log in"
+            Margin="0, 5"
+            BackgroundColor="LightGreen" 
+            Command="{Binding LoginCommand}" />
+        <Button 
+            Text="No account? Register here!"
+            Margin="0, 5"
+            BackgroundColor="LightSlateGrey" 
+            Command="{Binding GotoRegisterPageCommand}" />
+        <Button 
+            Text="Go back to Home"
+            Margin="0, 5"
+            BackgroundColor="LightGrey" 
+            Command="{Binding GoBackCommand}" />
         
-        <Button Text="Go back to Home"
-                Margin="0, 5"
-                BackgroundColor="LightGrey" 
-                Command="{Binding GoBackCommand}" />
-
+<!--Note remove-->
         <Label x:Name="message"
                FontSize="11"
                Text="{Binding Message}" />
-
     </VerticalStackLayout>
 </ContentPage>

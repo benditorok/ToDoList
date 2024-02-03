@@ -74,7 +74,7 @@ public class ConnectionService
         else
         {
             var error = await response.Content.ReadAsStringAsync();
-            _logger?.LogInformation("[GET-EX] " + error);
+            _logger?.LogError("[GET] " + error);
             throw new InvalidOperationException(error);
         }
     }
@@ -92,7 +92,7 @@ public class ConnectionService
         else
         {
             var error = await response.Content.ReadAsStringAsync();
-            _logger?.LogInformation("[POST-EX] " + error);
+            _logger?.LogError("[POST] " + error);
             throw new InvalidOperationException(error);
         }
     }
@@ -104,7 +104,7 @@ public class ConnectionService
         if (!response.IsSuccessStatusCode)
         {
             var error = await response.Content.ReadAsStringAsync();
-            _logger?.LogInformation("[DELETE-EX] " + error);
+            _logger?.LogError("[DELETE] " + error);
             throw new InvalidOperationException(error);
         }
     }
@@ -116,7 +116,7 @@ public class ConnectionService
         if (!response.IsSuccessStatusCode)
         {
             var error = await response.Content.ReadAsStringAsync();
-            _logger?.LogInformation("[PUT-EX] " + error);
+            _logger?.LogError("[PUT] " + error);
             throw new InvalidOperationException(error);
         }
     }

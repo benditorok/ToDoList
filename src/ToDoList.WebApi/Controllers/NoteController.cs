@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ToDoList.Application.Common.Interfaces;
 using ToDoList.Application.Notes;
 using ToDoList.Domain.Entities;
 
@@ -13,9 +14,9 @@ namespace ToDoList.WebApi.Controllers;
 [Authorize(Roles = "Administrator, Manager")]
 public class NoteController : ControllerBase
 {
-    private NoteLogic _logic;
+    private ILogic<Note> _logic;
 
-    public NoteController(NoteLogic logic)
+    public NoteController(ILogic<Note> logic)
     {
         _logic = logic;
     }

@@ -1,5 +1,7 @@
 ﻿using ToDoList.Application.Common.Interfaces;
+using ToDoList.Domain.Constants;
 using ToDoList.Domain.Entities;
+using ToDoList.Domain.Exceptions;
 
 namespace ToDoList.Application.Notes;
 
@@ -15,6 +17,12 @@ public class NoteLogic : ILogic<Note>
     // TODO Data sanitization, logic
     public async Task<int> CreateAsync(Note item)
     {
+        if (item.Title?.Length < NoteConstants.TilteMinLength || item.Title?.Length > NoteConstants.TilteMaxLength)
+            throw new InvalidNoteException($"Title of note Id:{item.Id} is invalid.");
+
+        if (item.Body?.Length < NoteConstants.BodyMinLength || item.Body?.Length > NoteConstants.BodyMaxLength)
+            throw new InvalidNoteException($"Body of note Id:{item.Id} is invalid.");
+
         await _repo.CreateAsync(item);
         return item.Id;
     }

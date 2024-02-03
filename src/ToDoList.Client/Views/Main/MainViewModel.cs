@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using ToDoList.Client.Common;
 using ToDoList.Client.Services.Connection;
 using ToDoList.Client.Views.Identity;
 using ToDoList.Client.Views.NoteLists;
@@ -12,7 +13,6 @@ public partial class MainViewModel : ObservableObject
 {
     private AuthorizedConnectionService _connectionService;
     private ILogger<MainViewModel>? _logger;
-    private static SemaphoreSlim _sm = new SemaphoreSlim(1, 1);
 
     [ObservableProperty]
     private NoteList? _userToDoList;
@@ -30,64 +30,11 @@ public partial class MainViewModel : ObservableObject
     {
         if (_connectionService.IsLoggedIn)
         {
-            await LoadToDoListAsync();
+            await RefreshToDoListAsync();
         }
         else
         {
             await Shell.Current.GoToAsync("//AccountPage");
-            //await Shell.Current.GoToAsync($"//{nameof(AccountPage)}");
-        }
-    }
-
-    private async Task LoadToDoListAsync()
-    {
-        try
-        {
-            UserToDoList = await _connectionService.GetAsync<NoteList>("user/gettodolist");
-
-            //const string title = "ToDoList";
-
-            //NoteList? todoList;
-
-            //await _sm.WaitAsync();
-
-            //try
-            //{
-            //    todoList = await _connectionService.GetAsync<NoteList>("user/synctodolist");
-
-            //    if (todoList != null)
-            //    {
-            //        UserToDoList = todoList;
-            //    }
-            //    else
-            //    {
-            //        NoteList newTodoList = new() { Title = title };
-            //        await _connectionService.PostAsync<NoteList>("user/addnotelist", newTodoList);
-            //    }
-            //}
-            //finally
-            //{
-            //    _sm.Release();
-            //}
-
-            //if (todoList == null)
-            //{
-            //    await LoadToDoListAsync();
-            //}
-
-        }
-        catch (Exception ex)
-        {
-            _logger?.LogInformation("[VM-MAIN] {ex}", ex.Message);
-
-            if (await Shell.Current.DisplayAlert("Alert", "Loading the ToDoList failed!", "Retry", "Exit"))
-            {
-                await LoadToDoListAsync();
-            }
-            else
-            {
-                Application.Current?.Quit();
-            }
         }
     }
 
@@ -95,12 +42,13 @@ public partial class MainViewModel : ObservableObject
     {
         try
         {
-            var list = await _connectionService.GetAsync<NoteList>($"user/getnotelist?id={UserToDoList?.Id}");
-            UserToDoList = list ?? UserToDoList;
+            // TODO should reload the page, order is not getting updated properly
+            UserToDoList = await _connectionService.GetAsync<NoteList>("user/gettodolist");
+            UserToDoList?.Notes.OrderBy(x => x.IsDone).ThenByDescending(x => x.Id);
         }
         catch (Exception ex)
         {
-            _logger?.LogInformation("[VM-MAIN] {ex}", ex.Message);
+            _logger?.LogError(ex, ex.Message);
         }
     }
 
@@ -113,11 +61,51 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            _logger?.LogInformation("[VM-MAIN] {ex}", ex.Message);
+            _logger?.LogError(ex, ex.Message);
         }
         finally
         {
             UserToDoItem = new();
+            await RefreshToDoListAsync();
+        }
+    }
+
+    [RelayCommand] 
+    private async Task SwitchNoteCompletionStateAsync(Note note)
+    {
+        try
+        {
+            bool done = note.IsDone;
+            note.IsDone = !done;
+
+            await _connectionService.PutAsync<Note>($"user/updatenote", note);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, ex.Message);
+        }
+        finally
+        {
+            await RefreshToDoListAsync();
+        }
+    }
+
+    [RelayCommand]
+    private async Task QuickRemoveNoteAsync(Note note)
+    {
+        try
+        {
+            if(await Shell.Current.DisplayAlert("Alert", $"Are you sure you want to delete this note? {note.Title}", "Yes", "Cancel"))
+            {
+                await _connectionService.DeleteAsync($"user/removenote?id={note.Id}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, ex.Message);
+        }
+        finally
+        {
             await RefreshToDoListAsync();
         }
     }

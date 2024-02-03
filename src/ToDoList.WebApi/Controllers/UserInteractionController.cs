@@ -16,10 +16,10 @@ namespace ToDoList.WebApi.Controllers;
 [Authorize]
 public class UserInteractionController : ControllerBase
 {
-    private NoteListLogic _noteListLogic;
-    private NoteLogic _noteLogic;
+    private ILogic<NoteList> _noteListLogic;
+    private ILogic<Note> _noteLogic;
 
-    public UserInteractionController(NoteListLogic noteListLogic, NoteLogic noteLogic)
+    public UserInteractionController(ILogic<NoteList> noteListLogic, ILogic<Note> noteLogic)
     {
         _noteListLogic = noteListLogic;
         _noteLogic = noteLogic;
@@ -194,8 +194,7 @@ public class UserInteractionController : ControllerBase
     [HttpGet("getuserinfo")]
     public Task<IActionResult> GetUserInfoAsync()
     {
-        var user = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-
+        var user = HttpContext.User.FindFirst(ClaimTypes.Email);
         if (user != null)
         {
             return Task.FromResult<IActionResult>(Ok(user.Value));

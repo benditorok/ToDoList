@@ -45,7 +45,7 @@ public partial class NoteListViewModel : ObservableObject
     private async Task RefreshUserNoteListsAsync()
     {
         UserNoteLists = await _connectionService.GetAsync<List<NoteList>>("user/getallnotelists");
-        _logger?.LogInformation("[VM-NOTELIST] RefreshUserNoteLists");
+        _logger?.LogInformation("Refreshed user notelists.");
     }
 
     [RelayCommand]
@@ -61,27 +61,7 @@ public partial class NoteListViewModel : ObservableObject
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Alert", "Creation failed!", "OK");
-            _logger?.LogInformation("[VM-NOTELIST-EX] {ex}", ex.Message);
-        }
-        finally
-        {
-            NewNoteList = new();
-            await RefreshUserNoteListsAsync();
-        }
-    }
-
-    [RelayCommand]
-    public async Task RemoveNoteListAsync(NoteList noteList)
-    {
-        try
-        {
-            await _connectionService.DeleteAsync($"user/removenotelist?id={noteList.Id}");
-            await Shell.Current.DisplayAlert("Alert", "Removal was successful!", "OK");
-        }
-        catch (Exception ex)
-        {
-            await Shell.Current.DisplayAlert("Alert", "Removal failed!", "OK");
-            _logger?.LogInformation("[VM-NOTELIST-EX] {ex}", ex.Message);
+            _logger?.LogError(ex, ex.Message);
         }
         finally
         {
@@ -99,6 +79,26 @@ public partial class NoteListViewModel : ObservableObject
         };
     
         await Shell.Current.GoToAsync($"{nameof(NoteSelectionPage)}", navigationParameter);
+    }
+
+    [RelayCommand]
+    private async Task RemoveNoteListAsync(NoteList noteList)
+    {
+        try
+        {
+            if (await Shell.Current.DisplayAlert("Alert", $"Are you sure you want to delete this list? {noteList?.Title}", "Yes", "Cancel"))
+            {
+                await _connectionService.DeleteAsync($"user/removenotelist?id={noteList?.Id}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, ex.Message);
+        }
+        finally
+        {
+            await RefreshUserNoteListsAsync();
+        }
     }
 
     [RelayCommand]

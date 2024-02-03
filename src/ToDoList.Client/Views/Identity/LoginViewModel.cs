@@ -35,13 +35,13 @@ public partial class LoginViewModel : ObservableObject
             {
                 await _connectionService.LoginAsync(Username!, Password!);
                 await Shell.Current.DisplayAlert("Alert", "Login was successful!", "OK");
-                await Shell.Current.GoToAsync("..");
+                await Shell.Current.GoToAsync("//AccountPage");
             }
         }
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlert("Alert", "Login failed!!", "OK");
-            _logger?.LogInformation("[VM-LOGIN-EX] {ex}", ex.Message);
+            _logger?.LogError(ex, ex.Message);
             Message = ex.Message;
         }
         finally

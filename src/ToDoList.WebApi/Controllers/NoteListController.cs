@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Security.Claims;
+using ToDoList.Application.Common.Interfaces;
 using ToDoList.Application.NoteLists;
 using ToDoList.Domain.Entities;
 
@@ -16,9 +17,9 @@ namespace ToDoList.WebApi.Controllers;
 [Authorize(Roles = "Administrator, Manager")]
 public class NoteListController : ControllerBase
 {
-    private NoteListLogic _logic;
+    private ILogic<NoteList> _logic;
 
-    public NoteListController(NoteListLogic logic)
+    public NoteListController(ILogic<NoteList> logic)
     {
         _logic = logic;
     }

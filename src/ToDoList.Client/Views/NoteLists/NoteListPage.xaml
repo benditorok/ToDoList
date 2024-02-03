@@ -15,64 +15,80 @@
         <Common:ColorConverter x:Key="ColorConverter" />
     </ContentPage.Resources>
     
-    <Grid Padding="30"
-          RowDefinitions="auto, *"
-          ColumnDefinitions="2*, *, *">
-        <Entry Grid.Row="0"
-               Grid.Column="0"
-               Placeholder="Add a new Title"
-               FontSize="24"
-               Margin="5"
-               Text="{Binding NewNoteList.Title}"/>
+    <Grid 
+        Margin="15"
+        RowDefinitions="auto, *"
+        ColumnDefinitions="2*, *, *">
+        <Entry 
+            Grid.Row="0"
+            Grid.Column="0"
+            Placeholder="Add a new Title"
+            FontSize="24"
+            Margin="5"
+            Text="{Binding NewNoteList.Title}"/>
 
-        <Picker Grid.Row="0"
-                Grid.Column="1"
-                Title="Select a color"
-                Margin="5"
-                ItemsSource="{Binding AvailableColors}"
-                SelectedItem="{Binding SelectedColor}"
-                SelectedIndex="{Binding AvailableColors}" />
+        <Picker 
+            Grid.Row="0"
+            Grid.Column="1"
+            Title="Select a color"
+            Margin="5"
+            ItemsSource="{Binding AvailableColors}"
+            SelectedItem="{Binding SelectedColor}"
+            SelectedIndex="{Binding AvailableColors}" />
 
-        <Button Grid.Row="0"
-                Grid.Column="2"
-                Text="Add"
-                Margin="5"
-                MinimumWidthRequest="80"
-                MaximumWidthRequest="200"
-                HorizontalOptions="Start"
-                FontSize="16"
-                Command="{Binding AddNoteListCommand}" />
+        <Button 
+            Grid.Row="0"
+            Grid.Column="2"
+            Text="Add"
+            Margin="5"
+            MinimumWidthRequest="80"
+            MaximumWidthRequest="200"
+            HorizontalOptions="Start"
+            FontSize="16"
+            Command="{Binding AddNoteListCommand}" />
 
-        <CollectionView Grid.Row="1"
-                        Grid.ColumnSpan="3"
-                        VerticalScrollBarVisibility="Always"
-                        ItemsUpdatingScrollMode="KeepItemsInView"
-                        ItemsSource="{Binding UserNoteLists}">
+        <CollectionView 
+            Grid.Row="1"
+            Grid.ColumnSpan="3"
+            VerticalScrollBarVisibility="Always"
+            ItemsUpdatingScrollMode="KeepItemsInView"
+            ItemsSource="{Binding UserNoteLists}">
             <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical"
-                                 Span="3" />
+                <GridItemsLayout 
+                    Orientation="Vertical"
+                    Span="3" />
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="Entity:NoteList">
                     <Grid>
-                        <Frame MinimumHeightRequest="75"
-                               MaximumHeightRequest="120"
-                               MinimumWidthRequest="80"
-                               CornerRadius="10"
-                               Margin="5"
-                               BackgroundColor="{Binding ColorRGBA, Converter={StaticResource ColorConverter}}">
+                        <Frame 
+                            MinimumHeightRequest="75"
+                            MaximumHeightRequest="120"
+                            MinimumWidthRequest="80"
+                            CornerRadius="10"
+                            Margin="5"
+                            BackgroundColor="{Binding ColorRGBA, Converter={StaticResource ColorConverter}}">
                             <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=GotoNoteSelectionCommand}"
-                                                      CommandParameter="{Binding .}" />
-
-                                <PointerGestureRecognizer PointerReleasedCommand="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=GotoNoteSelectionCommand}"
-                                                          PointerReleasedCommandParameter="{Binding .}"/>
+                                <!-- Note open next page -->
+                                <TapGestureRecognizer
+                                    Buttons="Primary"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=GotoNoteSelectionCommand}"
+                                    CommandParameter="{Binding .}" />
                             </Frame.GestureRecognizers>
-                            
-                            <Label Text="{Binding Title}"
-                                   FontSize="24"
-                                   HorizontalTextAlignment="Center"
-                                   VerticalTextAlignment="Center" />
+                            <!-- Note context menu-->
+                            <FlyoutBase.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem 
+                                    Text="Remove list"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type NoteListView:NoteListViewModel}}, Path=RemoveNoteListCommand}"
+                                    CommandParameter="{Binding Source={RelativeSource AncestorType={x:Type Entity:NoteList}}}" />
+                            </MenuFlyout>
+                            </FlyoutBase.ContextFlyout>
+                            <Label 
+                                Text="{Binding Title}"
+                                FontSize="24"
+                                HorizontalTextAlignment="Center"
+                                VerticalTextAlignment="Center" />
                         </Frame>
                     </Grid>
                 </DataTemplate>
