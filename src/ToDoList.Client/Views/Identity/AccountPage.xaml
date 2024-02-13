@@ -14,16 +14,15 @@
         Margin="15" 
         Padding="30, 60, 30, 30">
         <Label 
-            Text="{Binding UserName, StringFormat='Welcome, {0}'}" 
-            FontSize="32"
-            IsVisible="{Binding IsLoggedIn}" />
+            Text="{Binding WelcomeMessage}" 
+            FontSize="32" />
         
         <Button 
             Text="Log in"
             Margin="0, 5"
             BackgroundColor="LightGreen" 
             Command="{Binding GotoLoginPageCommand}"
-            IsVisible="{Binding IsLoggedInInverted}" />
+            IsVisible="{Binding IsLoggedOut}" />
         <Button 
             Text="Log out"
             Margin="0, 5"

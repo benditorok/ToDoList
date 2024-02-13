@@ -12,13 +12,16 @@ public partial class AccountViewModel : ObservableObject
     private ILogger<AccountViewModel>? _logger;
 
     [ObservableProperty]
+    private string? _welcomeMessage;
+
+    [ObservableProperty]
     private string? _userName = "";
 
     [ObservableProperty]
-    private bool _isLoggedIn = false;
+    private bool _isLoggedIn;
 
     [ObservableProperty]
-    private bool _isLoggedInInverted = true;
+    private bool _isLoggedOut;
 
     public AccountViewModel(AuthorizedConnectionService connectionService, ILogger<AccountViewModel>? logger) 
     {
@@ -28,17 +31,18 @@ public partial class AccountViewModel : ObservableObject
 
     public void OnPageLoaded(object? sender, EventArgs e)
     {
-        // TODO make the inverted val another way
         if (_connectionService.IsLoggedIn)
         {
             UserName = _connectionService.UserName;
             IsLoggedIn = true;
-            IsLoggedInInverted = false;
+            IsLoggedOut = false;
+            WelcomeMessage = $"Welcome, {UserName}";
         }
         else
         {
             IsLoggedIn = false;
-            IsLoggedInInverted = true;
+            IsLoggedOut = true;
+            WelcomeMessage = "Welcome, Please log in.";
         }
     }
 
@@ -47,7 +51,8 @@ public partial class AccountViewModel : ObservableObject
     {
         _connectionService.LogoutClearToken();
         IsLoggedIn = false;
-        IsLoggedInInverted = true;
+        IsLoggedOut = true;
+        WelcomeMessage = "Welcome, Please log in.";
 
         await Shell.Current.GoToAsync("//AccountPage");
     }
