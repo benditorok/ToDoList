@@ -36,6 +36,7 @@ public class UserInteractionController : ControllerBase
         }
 
         value.UserId = user.Value;
+        value.Id = 0;
         await _noteListLogic.CreateAsync(value);
 
         return Ok(value.Id);
@@ -89,13 +90,24 @@ public class UserInteractionController : ControllerBase
         var item = (user != null) ? await _noteListLogic.ReadAll()
             .FirstOrDefaultAsync(x => x.UserId == user.Value && x.Title == title) : null;
 
-        if (item == null)
+        if (user != null)
         {
-            int todolistId = await _noteListLogic.CreateAsync(new() { Title = title, UserId = user?.Value });
-            item = await _noteListLogic.ReadAsync(todolistId);
-        }
+            if (item != null)
+            {
+                return Ok(item);
+            }
+            else
+            {
+                int todolistId = await _noteListLogic.CreateAsync(new() { Title = title, UserId = user?.Value });
+                item = await _noteListLogic.ReadAsync(todolistId);
 
-        return Ok(item);
+                return Ok(item);
+            }
+        }
+        else
+        {
+            return Forbid();
+        }
     }
 
     [HttpPut("updatenotelist")]
@@ -141,6 +153,7 @@ public class UserInteractionController : ControllerBase
         if (list.UserId == user?.Value)
         {
             value.NoteListId = listId;
+            value.Id = 0;
             await _noteLogic.CreateAsync(value);
             return Ok(value.Id);
         }
